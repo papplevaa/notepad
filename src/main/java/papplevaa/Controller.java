@@ -67,4 +67,18 @@ public class Controller implements CallbackHandler {
     public void paste() {
         System.out.println("Paste");
     }
+
+    @Override
+    public void closeWindow() {
+        // Ask model if there are modified tabs
+        // if true, show are you sure? dialog
+        // else close window
+        if(false) {
+            System.out.println("Show dialog");
+            //this.view.showDialog();
+        } else {
+            System.out.println("Close frame");
+            this.view.closeFrame();
+        }
+    }
 }

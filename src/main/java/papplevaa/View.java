@@ -2,25 +2,28 @@ package papplevaa;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 public class View {
     private CallbackHandler callback;
+    private final JFrame frame;
+    private final JMenuBar menuBar;
 
     public View() {
-        JFrame frame = new JFrame("Notepad");
-        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        frame.setMinimumSize(new Dimension(320, 240));
-        frame.setSize(new Dimension(320, 240));
+        /* ------ Frame ------ */
+        this.frame = new JFrame("Notepad");
+        this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        this.frame.setMinimumSize(new Dimension(320, 240));
+        this.frame.setSize(new Dimension(320, 240));
 
         /* ------ Menubar ------ */
-        JMenuBar menuBar = new JMenuBar();
+        this.menuBar = new JMenuBar();
 
         /* --- File Menu --- */
         JMenu menu = new JMenu("File");
         // Add ALT + F as accelerator?
-        menuBar.add(menu);
+        this.menuBar.add(menu);
 
         // New Tab menu item
         JMenuItem menuItem = new JMenuItem("New Tab");
@@ -65,7 +68,7 @@ public class View {
         /* --- Edit Menu --- */
         menu = new JMenu("Edit");
         // Add ALT + E as accelerator?
-        menuBar.add(menu);
+        this.menuBar.add(menu);
 
         // Undo menu item
         menuItem = new JMenuItem("Undo");
@@ -111,9 +114,9 @@ public class View {
         menu.add(menuItem);
 
 
-        frame.setJMenuBar(menuBar);
+        this.frame.setJMenuBar(menuBar);
 
-        frame.setVisible(true);
+        this.frame.setVisible(true);
     }
 
     // Feel free to create separate update functions for each property separately
@@ -122,11 +125,32 @@ public class View {
         // Call update functions, which reflect the new state in the Swing components
     }
 
+    public void closeFrame() {
+        this.frame.dispose();
+    }
+
     public void registerCallback(CallbackHandler callback) {
         this.callback = callback;
+
+        // THIS MUST BE MOVED
+        this.frame.addWindowListener(new MyWindowAdapter(callback));
     }
 
     public void testHelloWorld() { // can delete later, just for testing
         this.callback.helloWorld();
+    }
+
+    private static class MyWindowAdapter extends WindowAdapter {
+        private CallbackHandler callback;
+
+        public MyWindowAdapter(CallbackHandler callback) {
+            super();
+            this.callback = callback;
+        }
+
+        @Override
+        public void windowClosing(WindowEvent e) {
+            callback.closeWindow();
+        }
     }
 }

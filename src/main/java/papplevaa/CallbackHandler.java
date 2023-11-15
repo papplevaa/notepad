@@ -14,4 +14,5 @@ public interface CallbackHandler {
     void copy();
     void cut();
     void paste();
+    void closeWindow();
 }
