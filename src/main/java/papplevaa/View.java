@@ -1,5 +1,8 @@
 package papplevaa;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -8,17 +11,25 @@ public class View {
     private CallbackHandler callback;
     private final JFrame frame;
     private final JMenuBar menuBar;
+    private final JTabbedPane tabbedPane;
 
     public View() {
+        /* ------ Set LaF to Light ------ */
+        try {
+            UIManager.setLookAndFeel(new FlatDarkLaf());
+        } catch( Exception ex ) {
+            System.err.println( "Failed to initialize LaF" );
+        }
+
         /* ------ Frame ------ */
         this.frame = new JFrame("Notepad");
         this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-
         this.frame.setMinimumSize(new Dimension(320, 240));
         this.frame.setSize(new Dimension(320, 240));
 
         /* ------ Menubar ------ */
         this.menuBar = new JMenuBar();
+        this.frame.setJMenuBar(menuBar);
 
         /* --- File Menu --- */
         JMenu menu = new JMenu("File");
@@ -113,9 +124,16 @@ public class View {
         menuItem.addActionListener(event -> callback.paste());
         menu.add(menuItem);
 
+        /* ------ Theme Button ------ */
+        JButton button = new JButton("Change Theme");
+        button.addActionListener(event -> callback.invertTheme());
+        this.menuBar.add(button);
 
-        this.frame.setJMenuBar(menuBar);
+        /* ------ Tabbed Pane ------ */
+        this.tabbedPane = new JTabbedPane();
+        this.frame.add(tabbedPane);
 
+        /* Set frame visible */
         this.frame.setVisible(true);
     }
 
@@ -123,6 +141,29 @@ public class View {
     public void activeTabUpdated(int activeTab) {
         // For each publicly available property of the model ...
         // Call update functions, which reflect the new state in the Swing components
+    }
+
+    public void tabAdded(String name, String content) {
+        JTextArea textArea = new JTextArea(content);
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        tabbedPane.add(name, scrollPane);
+    }
+
+    public void tabRemoved(int tabIndex) {
+        this.tabbedPane.remove(tabIndex);
+    }
+
+    public void darkModeChanged(boolean darkMode) {
+        try {
+            if(darkMode) {
+                UIManager.setLookAndFeel(new FlatDarkLaf());
+            } else {
+                UIManager.setLookAndFeel(new FlatLightLaf());
+            }
+        } catch(Exception ex) {
+            System.out.println( "Failed to initialize LaF" );
+        }
+        SwingUtilities.updateComponentTreeUI(frame);
     }
 
     public void closeFrame() {

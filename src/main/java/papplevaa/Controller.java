@@ -20,6 +20,7 @@ public class Controller implements CallbackHandler {
 
     @Override
     public void newTab() {
+        this.model.addTab(new Tab());
         System.out.println("New tab");
     }
 
@@ -80,5 +81,11 @@ public class Controller implements CallbackHandler {
             System.out.println("Close frame");
             this.view.closeFrame();
         }
+    }
+
+    @Override
+    public void invertTheme() {
+        this.model.setDarkMode(!this.model.isDarkMode());
+        System.out.println("Theme changed");
     }
 }

@@ -42,6 +42,7 @@ public class Model {
 
     public void setDarkMode(boolean darkMode) {
         this.darkMode = darkMode;
+        this.view.darkModeChanged(darkMode);
     }
 
     public int getWindowWidth() {
@@ -61,7 +62,8 @@ public class Model {
     }
 
     public void addTab(Tab tab) {
-        tabs.add(tab);
+        this.tabs.add(tab);
+        this.view.tabAdded(tab.getName(), tab.getCurrentContent());
     }
 
     public void removeTab(int tabIndex) {
@@ -70,5 +72,6 @@ public class Model {
             if(tabs.isEmpty()) activeTab = -1;
             else activeTab = (tabIndex - 1) % tabs.size();
         }
+        this.view.tabRemoved(tabIndex);
     }
 }
