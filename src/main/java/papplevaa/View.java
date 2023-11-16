@@ -1,11 +1,11 @@
 package papplevaa;
 
-import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatLightLaf;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 
 public class View {
     private CallbackHandler callback;
@@ -14,10 +14,10 @@ public class View {
     private final JTabbedPane tabbedPane;
 
     public View() {
-        /* ------ Set LaF to Light ------ */
+        /* ------ Set LaF to Dark ------ */
         try {
             UIManager.setLookAndFeel(new FlatDarkLaf());
-        } catch( Exception ex ) {
+        } catch(Exception ex) {
             System.err.println( "Failed to initialize LaF" );
         }
 
@@ -90,7 +90,7 @@ public class View {
         menu.add(menuItem);
 
         // Redo menu item
-        menuItem = new JMenuItem("Undo");
+        menuItem = new JMenuItem("Redo");
         menuItem.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_Y, InputEvent.CTRL_DOWN_MASK
         ));
@@ -175,10 +175,6 @@ public class View {
 
         // THIS MUST BE MOVED
         this.frame.addWindowListener(new MyWindowAdapter(callback));
-    }
-
-    public void testHelloWorld() { // can delete later, just for testing
-        this.callback.helloWorld();
     }
 
     private static class MyWindowAdapter extends WindowAdapter {

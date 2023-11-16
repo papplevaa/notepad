@@ -8,14 +8,6 @@ public class Controller implements CallbackHandler {
         this.view = new View();
         this.view.registerCallback(this);
         this.model = new Model(view);
-
-        // testing
-        this.view.testHelloWorld();
-    }
-
-    @Override
-    public void helloWorld() {
-        System.out.println("Hello, World!");
     }
 
     @Override
@@ -75,11 +67,11 @@ public class Controller implements CallbackHandler {
         // if true, show are you sure? dialog
         // else close window
         if(false) {
-            System.out.println("Show dialog");
             //this.view.showDialog();
+            System.out.println("Show dialog");
         } else {
-            System.out.println("Close frame");
             this.view.closeFrame();
+            System.out.println("Close frame");
         }
     }
 
