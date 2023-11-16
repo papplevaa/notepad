@@ -9,24 +9,82 @@ import com.formdev.flatlaf.FlatLightLaf;
 
 public class View {
     private CallbackHandler callback;
-    private final JFrame frame;
-    private final JMenuBar menuBar;
-    private final JTabbedPane tabbedPane;
+    private JFrame frame;
+    private JMenuBar menuBar;
+    private JTabbedPane tabbedPane;
 
-    public View() {
-        /* ------ Set LaF to Dark ------ */
+    public void registerCallback(CallbackHandler callback) {
+        this.callback = callback;
+    }
+
+    // Feel free to create separate update functions for each property separately
+    public void activeTabUpdated(int activeTab) {
+        // For each publicly available property of the model ...
+        // Call update functions, which reflect the new state in the Swing components
+    }
+
+    public void tabAdded(String name, String content) {
+        JTextArea textArea = new JTextArea(content);
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        tabbedPane.add(name, scrollPane);
+    }
+
+    public void tabRemoved(int tabIndex) {
+        this.tabbedPane.remove(tabIndex);
+    }
+
+    public void updateUIManager(boolean darkMode) {
         try {
-            UIManager.setLookAndFeel(new FlatDarkLaf());
+            if(darkMode) {
+                UIManager.setLookAndFeel(new FlatDarkLaf());
+            } else {
+                UIManager.setLookAndFeel(new FlatLightLaf());
+            }
         } catch(Exception ex) {
-            System.err.println( "Failed to initialize LaF" );
+            System.out.println( "Failed to initialize LaF" );
         }
+        SwingUtilities.updateComponentTreeUI(frame);
+    }
 
+    public void closeFrame() {
+        this.frame.dispose();
+    }
+
+    public void initialize(Model model) {
         /* ------ Frame ------ */
         this.frame = new JFrame("Notepad");
         this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        this.frame.setMinimumSize(new Dimension(320, 240));
-        this.frame.setSize(new Dimension(320, 240));
+        this.frame.addWindowListener(new MyWindowAdapter(callback));
+        this.frame.setMinimumSize(new Dimension(model.getMinimumWindowWidth(), model.getMinimumWindowHeight()));
+        this.frame.setSize(new Dimension(model.getWindowWidth(), model.getWindowHeight()));
 
+        /* ------ Menubar ------ */
+        this.initMenu();
+
+        /* ------ Tabbed Pane ------ */
+        this.tabbedPane = new JTabbedPane();
+        this.frame.add(tabbedPane);
+
+        /* ------ Init LaF ------ */
+        this.updateUIManager(model.isDarkMode());
+
+        /* Set frame visible */
+        this.frame.setVisible(true);
+    }
+
+    private static class MyWindowAdapter extends WindowAdapter {
+        private CallbackHandler callback;
+        public MyWindowAdapter(CallbackHandler callback) {
+            super();
+            this.callback = callback;
+        }
+        @Override
+        public void windowClosing(WindowEvent e) {
+            callback.closeWindow();
+        }
+    }
+
+    public void initMenu() {
         /* ------ Menubar ------ */
         this.menuBar = new JMenuBar();
         this.frame.setJMenuBar(menuBar);
@@ -128,66 +186,5 @@ public class View {
         JButton button = new JButton("Change Theme");
         button.addActionListener(event -> callback.invertTheme());
         this.menuBar.add(button);
-
-        /* ------ Tabbed Pane ------ */
-        this.tabbedPane = new JTabbedPane();
-        this.frame.add(tabbedPane);
-
-        /* Set frame visible */
-        this.frame.setVisible(true);
-    }
-
-    // Feel free to create separate update functions for each property separately
-    public void activeTabUpdated(int activeTab) {
-        // For each publicly available property of the model ...
-        // Call update functions, which reflect the new state in the Swing components
-    }
-
-    public void tabAdded(String name, String content) {
-        JTextArea textArea = new JTextArea(content);
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        tabbedPane.add(name, scrollPane);
-    }
-
-    public void tabRemoved(int tabIndex) {
-        this.tabbedPane.remove(tabIndex);
-    }
-
-    public void darkModeChanged(boolean darkMode) {
-        try {
-            if(darkMode) {
-                UIManager.setLookAndFeel(new FlatDarkLaf());
-            } else {
-                UIManager.setLookAndFeel(new FlatLightLaf());
-            }
-        } catch(Exception ex) {
-            System.out.println( "Failed to initialize LaF" );
-        }
-        SwingUtilities.updateComponentTreeUI(frame);
-    }
-
-    public void closeFrame() {
-        this.frame.dispose();
-    }
-
-    public void registerCallback(CallbackHandler callback) {
-        this.callback = callback;
-
-        // THIS MUST BE MOVED
-        this.frame.addWindowListener(new MyWindowAdapter(callback));
-    }
-
-    private static class MyWindowAdapter extends WindowAdapter {
-        private CallbackHandler callback;
-
-        public MyWindowAdapter(CallbackHandler callback) {
-            super();
-            this.callback = callback;
-        }
-
-        @Override
-        public void windowClosing(WindowEvent e) {
-            callback.closeWindow();
-        }
     }
 }
