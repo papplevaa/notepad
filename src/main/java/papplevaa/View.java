@@ -12,7 +12,6 @@ import com.formdev.flatlaf.FlatLightLaf;
 public class View {
     private CallbackHandler callback;
     private JFrame frame;
-    private JMenuBar menuBar;
     private JTabbedPane tabbedPane;
 
     public void registerCallback(CallbackHandler callback) {
@@ -45,18 +44,12 @@ public class View {
             }
         });
 
-        // This makes it so you can immediately write in the text area
+        // This makes it, so you can immediately write in the text area
         textArea.requestFocus();
     }
 
     public void tabRemoved(int tabIndex) {
         this.tabbedPane.remove(tabIndex);
-    }
-
-    private void fireContentChanged() {
-        JScrollPane selectedScrollPane = (JScrollPane) this.tabbedPane.getSelectedComponent();
-        JTextArea selectedTextArea = (JTextArea) selectedScrollPane.getViewport().getView();
-        this.callback.updateContent(selectedTextArea.getText());
     }
 
     public void updateUIManager(boolean darkMode) {
@@ -74,6 +67,12 @@ public class View {
 
     public void closeFrame() {
         this.frame.dispose();
+    }
+
+    private void fireContentChanged() {
+        JScrollPane selectedScrollPane = (JScrollPane) this.tabbedPane.getSelectedComponent();
+        JTextArea selectedTextArea = (JTextArea) selectedScrollPane.getViewport().getView();
+        this.callback.updateContent(selectedTextArea.getText());
     }
 
     public void initialize(Model model) {
@@ -112,13 +111,13 @@ public class View {
 
     public void initMenu() {
         /* ------ Menubar ------ */
-        this.menuBar = new JMenuBar();
+        JMenuBar menuBar = new JMenuBar();
         this.frame.setJMenuBar(menuBar);
 
         /* --- File Menu --- */
         JMenu menu = new JMenu("File");
         // Add ALT + F as accelerator?
-        this.menuBar.add(menu);
+        menuBar.add(menu);
 
         // New Tab menu item
         JMenuItem menuItem = new JMenuItem("New Tab");
@@ -163,7 +162,7 @@ public class View {
         /* --- Edit Menu --- */
         menu = new JMenu("Edit");
         // Add ALT + E as accelerator?
-        this.menuBar.add(menu);
+        menuBar.add(menu);
 
         // Undo menu item
         menuItem = new JMenuItem("Undo");
@@ -211,6 +210,6 @@ public class View {
         /* ------ Theme Button ------ */
         JButton button = new JButton("Change Theme");
         button.addActionListener(event -> callback.invertTheme());
-        this.menuBar.add(button);
+        menuBar.add(button);
     }
 }
