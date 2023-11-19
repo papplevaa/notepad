@@ -3,6 +3,8 @@ package papplevaa;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -15,11 +17,11 @@ public class View {
     private JTabbedPane tabbedPane;
 
     // returns null if tabbedPane has no panes
-    public JTextArea getSelectedTextArea() {
+    public UndoableTextArea getSelectedTextArea() {
         JScrollPane scrollPane = (JScrollPane) tabbedPane.getSelectedComponent();
         if(scrollPane == null)
             return null;
-        return (JTextArea) scrollPane.getViewport().getView();
+        return (UndoableTextArea) scrollPane.getViewport().getView();
     }
     
     public void registerCallback(CallbackHandler callback) {
@@ -31,7 +33,7 @@ public class View {
     }
 
     public void tabAdded(String name, String content) {
-        JTextArea textArea = setupCustomizedJTextArea(content);
+        UndoableTextArea textArea = setupCustomizedJTextArea(content);
         JScrollPane scrollPane = new JScrollPane(textArea);
         this.tabbedPane.add(name, scrollPane);
 
@@ -54,13 +56,6 @@ public class View {
             System.out.println("Failed to initialize LaF");
         }
         SwingUtilities.updateComponentTreeUI(this.frame);
-    }
-
-    private void fireContentChanged() {
-        JTextArea textArea = this.getSelectedTextArea();
-        if(textArea != null) {
-            this.callback.updateContent(textArea.getText());
-        }
     }
 
     public void closeFrame() {
@@ -206,17 +201,25 @@ public class View {
         menuBar.add(button);
     }
 
-    private JTextArea setupCustomizedJTextArea(String content) {
-        JTextArea textArea = new JTextArea(content);
+    private UndoableTextArea setupCustomizedJTextArea(String content) {
+        UndoableTextArea textArea = new UndoableTextArea(content);
+
+        textArea.getDocument().addUndoableEditListener(new UndoableEditListener() {
+            @Override
+            public void undoableEditHappened(UndoableEditEvent e) {
+                textArea.getUndoManager().addEdit(e.getEdit());
+            }
+        });
+
         textArea.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                fireContentChanged();
+                callback.updateContent(textArea.getText());
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                fireContentChanged();
+                callback.updateContent(textArea.getText());
             }
 
             @Override
