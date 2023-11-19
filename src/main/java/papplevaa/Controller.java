@@ -20,13 +20,10 @@ public class Controller implements CallbackHandler {
 
     @Override
     public void closeTab() {
+        int idx = this.model.getActiveTabIndex();
+        this.model.removeTab(idx);
+        //this.view.showDialogForUnsavedChanges();
         System.out.println("Close Tab");
-    }
-
-    @Override
-    public void updateContent(String text) {
-        this.model.getActiveTab().setCurrentContent(text);
-        System.out.println("Content updated to: " + text);
     }
 
     @Override
@@ -87,5 +84,11 @@ public class Controller implements CallbackHandler {
     public void invertTheme() {
         this.model.setDarkMode(!this.model.isDarkMode());
         System.out.println("Theme changed");
+    }
+
+    @Override
+    public void updateContent(String text) {
+        this.model.getActiveTab().setCurrentContent(text);
+        System.out.println("Content updated to: " + text);
     }
 }
