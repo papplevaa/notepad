@@ -31,6 +31,9 @@ public class Model {
     }
 
     public Tab getActiveTab() {
+        if(tabs.isEmpty()) {
+            return null;
+        }
         return tabs.get(activeTab);
     }
 

@@ -1,6 +1,5 @@
 package papplevaa;
 
-import javax.swing.*;
 
 public class Controller implements CallbackHandler {
     private View view;
@@ -45,39 +44,47 @@ public class Controller implements CallbackHandler {
 
     @Override
     public void undo() {
+        UndoableTextArea textArea = this.view.getSelectedTextArea();
+        if(textArea != null) {
+            textArea.undo();
+        }
         System.out.println("Undo");
     }
 
     @Override
     public void redo() {
+        UndoableTextArea textArea = this.view.getSelectedTextArea();
+        if(textArea != null) {
+            textArea.redo();
+        }
         System.out.println("Redo");
     }
 
     @Override
     public void copy() {
-        JTextArea textArea = this.view.getSelectedTextArea();
+        System.out.println("Copy");
+        UndoableTextArea textArea = this.view.getSelectedTextArea();
         if(textArea != null) {
             textArea.copy();
         }
-        System.out.println("Copy");
     }
 
     @Override
     public void cut() {
-        JTextArea textArea = this.view.getSelectedTextArea();
+        System.out.println("Cut");
+        UndoableTextArea textArea = this.view.getSelectedTextArea();
         if(textArea != null) {
             textArea.cut();
         }
-        System.out.println("Cut");
     }
 
     @Override
     public void paste() {
-        JTextArea textArea = this.view.getSelectedTextArea();
+        System.out.println("Paste");
+        UndoableTextArea textArea = this.view.getSelectedTextArea();
         if(textArea != null) {
             textArea.paste();
         }
-        System.out.println("Paste");
     }
 
     @Override
@@ -101,8 +108,8 @@ public class Controller implements CallbackHandler {
     }
 
     @Override
-    public void updateContent(String text) {
-        this.model.getActiveTab().setCurrentContent(text);
-        //System.out.println("Content updated to: " + text);
+    public void updateContent(String newContent) {
+        this.model.getActiveTab().setCurrentContent(newContent);
+        System.out.println("Content updated");
     }
 }
