@@ -14,6 +14,14 @@ public class View {
     private JFrame frame;
     private JTabbedPane tabbedPane;
 
+    // returns null if tabbedPane has no panes
+    public JTextArea getSelectedTextArea() {
+        JScrollPane scrollPane = (JScrollPane) tabbedPane.getSelectedComponent();
+        if(scrollPane == null)
+            return null;
+        return (JTextArea) scrollPane.getViewport().getView();
+    }
+    
     public void registerCallback(CallbackHandler callback) {
         this.callback = callback;
     }
@@ -23,26 +31,9 @@ public class View {
     }
 
     public void tabAdded(String name, String content) {
-        JTextArea textArea = new JTextArea(content);
+        JTextArea textArea = setupCustomizedJTextArea(content);
         JScrollPane scrollPane = new JScrollPane(textArea);
         this.tabbedPane.add(name, scrollPane);
-
-        textArea.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                fireContentChanged();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                fireContentChanged();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                // Plain text documents do not fire these kind of events.
-            }
-        });
 
         // This makes it, so you can immediately write in the text area
         textArea.requestFocus();
@@ -60,28 +51,42 @@ public class View {
                 UIManager.setLookAndFeel(new FlatLightLaf());
             }
         } catch(Exception ex) {
-            System.out.println( "Failed to initialize LaF" );
+            System.out.println("Failed to initialize LaF");
         }
-        SwingUtilities.updateComponentTreeUI(frame);
+        SwingUtilities.updateComponentTreeUI(this.frame);
+    }
+
+    private void fireContentChanged() {
+        JTextArea textArea = this.getSelectedTextArea();
+        if(textArea != null) {
+            this.callback.updateContent(textArea.getText());
+        }
     }
 
     public void closeFrame() {
         this.frame.dispose();
     }
 
-    private void fireContentChanged() {
-        JScrollPane selectedScrollPane = (JScrollPane) this.tabbedPane.getSelectedComponent();
-        JTextArea selectedTextArea = (JTextArea) selectedScrollPane.getViewport().getView();
-        this.callback.updateContent(selectedTextArea.getText());
-    }
+
+
+
+
+
+
 
     public void initialize(Model model) {
         /* ------ Frame ------ */
         this.frame = new JFrame("Notepad");
+        // Set custom close operation here
         this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        this.frame.addWindowListener(new MyWindowAdapter(callback));
-        this.frame.setMinimumSize(new Dimension(model.getMinimumWindowWidth(), model.getMinimumWindowHeight()));
+        this.frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                callback.closeWindow();
+            }
+        });
         this.frame.setSize(new Dimension(model.getWindowWidth(), model.getWindowHeight()));
+        this.frame.setMinimumSize(new Dimension(model.getMinimumWindowWidth(), model.getMinimumWindowHeight()));
 
         /* ------ Menubar ------ */
         this.initMenu();
@@ -95,18 +100,6 @@ public class View {
 
         /* Set frame visible */
         this.frame.setVisible(true);
-    }
-
-    private static class MyWindowAdapter extends WindowAdapter {
-        private CallbackHandler callback;
-        public MyWindowAdapter(CallbackHandler callback) {
-            super();
-            this.callback = callback;
-        }
-        @Override
-        public void windowClosing(WindowEvent e) {
-            callback.closeWindow();
-        }
     }
 
     public void initMenu() {
@@ -211,5 +204,57 @@ public class View {
         JButton button = new JButton("Change Theme");
         button.addActionListener(event -> callback.invertTheme());
         menuBar.add(button);
+    }
+
+    private JTextArea setupCustomizedJTextArea(String content) {
+        JTextArea textArea = new JTextArea(content);
+        textArea.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                fireContentChanged();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                fireContentChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // Plain text documents do not fire these kind of events.
+            }
+        });
+
+        textArea.getInputMap().put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK),
+                new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        callback.copy();
+                    }
+                }
+        );
+
+        textArea.getInputMap().put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK),
+                new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        callback.cut();
+                    }
+                }
+        );
+
+        textArea.getInputMap().put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK),
+                new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        callback.paste();
+                    }
+                }
+        );
+
+        return textArea;
     }
 }

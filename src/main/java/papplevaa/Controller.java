@@ -1,5 +1,7 @@
 package papplevaa;
 
+import javax.swing.*;
+
 public class Controller implements CallbackHandler {
     private View view;
     private Model model;
@@ -53,16 +55,28 @@ public class Controller implements CallbackHandler {
 
     @Override
     public void copy() {
+        JTextArea textArea = this.view.getSelectedTextArea();
+        if(textArea != null) {
+            textArea.copy();
+        }
         System.out.println("Copy");
     }
 
     @Override
     public void cut() {
+        JTextArea textArea = this.view.getSelectedTextArea();
+        if(textArea != null) {
+            textArea.cut();
+        }
         System.out.println("Cut");
     }
 
     @Override
     public void paste() {
+        JTextArea textArea = this.view.getSelectedTextArea();
+        if(textArea != null) {
+            textArea.paste();
+        }
         System.out.println("Paste");
     }
 
@@ -89,6 +103,6 @@ public class Controller implements CallbackHandler {
     @Override
     public void updateContent(String text) {
         this.model.getActiveTab().setCurrentContent(text);
-        System.out.println("Content updated to: " + text);
+        //System.out.println("Content updated to: " + text);
     }
 }
