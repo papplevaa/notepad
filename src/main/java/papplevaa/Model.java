@@ -4,21 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Model {
-    // Make view transient so it is not serialized?
-    private View view;
     private final List<Tab> tabs;
     private int activeTab;
+    // Make view transient so it is not serialized?
+    private View view;
     private boolean darkMode;
     private int height;
     private int width;
+    private final int MINHEIGHT = 240;
+    private final int MINWIDTH = 320;
 
     public Model(View view) {
-        this.view = view;
         this.tabs = new ArrayList<>();
         this.activeTab = -1;
         this.darkMode = true;
-        this.height = 320;
-        this.width = 240;
+        this.view = view;
+        this.view.initialize(this);
+        // Windowsize comes from view
+        // Should not serialize view (make it transient?)
+        //  - store window size in model
+        //  - view initializes based on model upon start
     }
 
     public int getActiveTabIndex() {
@@ -42,6 +47,7 @@ public class Model {
 
     public void setDarkMode(boolean darkMode) {
         this.darkMode = darkMode;
+        this.view.updateUIManager(darkMode);
     }
 
     public int getWindowWidth() {
@@ -52,6 +58,10 @@ public class Model {
         this.width = width;
     }
 
+    public int getMinimumWindowWidth() {
+        return this.MINWIDTH;
+    }
+
     public int getWindowHeight() {
         return this.height;
     }
@@ -60,8 +70,13 @@ public class Model {
         this.height = height;
     }
 
+    public int getMinimumWindowHeight() {
+        return this.MINHEIGHT;
+    }
+
     public void addTab(Tab tab) {
-        tabs.add(tab);
+        this.tabs.add(tab);
+        this.view.tabAdded(tab.getName(), tab.getCurrentContent());
     }
 
     public void removeTab(int tabIndex) {
@@ -70,5 +85,6 @@ public class Model {
             if(tabs.isEmpty()) activeTab = -1;
             else activeTab = (tabIndex - 1) % tabs.size();
         }
+        this.view.tabRemoved(tabIndex);
     }
 }
