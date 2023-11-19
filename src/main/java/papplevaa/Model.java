@@ -81,10 +81,12 @@ public class Model {
     }
 
     public void removeTab(int tabIndex) {
+        if(tabIndex <= 0 || tabIndex > tabs.size()) {
+            return;
+        }
         tabs.remove(tabIndex);
         if(activeTab == tabIndex) {
-            if(tabs.isEmpty()) activeTab = -1;
-            else activeTab = (tabIndex - 1) % tabs.size();
+            activeTab = (tabIndex - 1) % tabs.size();
         }
         this.view.tabRemoved(tabIndex);
     }
