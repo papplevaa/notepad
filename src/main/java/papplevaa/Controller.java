@@ -13,13 +13,20 @@ public class Controller implements CallbackHandler {
 
     @Override
     public void newTab() {
-        this.model.addTab(new Tab());
+        int idx = this.model.addTab(new Tab());
+        this.model.setActiveTabIndex(idx);
         System.out.println("New tab");
     }
 
     @Override
     public void closeTab() {
         System.out.println("Close Tab");
+    }
+
+    @Override
+    public void updateContent(String text) {
+        this.model.getActiveTab().setCurrentContent(text);
+        System.out.println("Content updated to: " + text);
     }
 
     @Override

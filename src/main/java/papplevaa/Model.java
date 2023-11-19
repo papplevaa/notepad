@@ -74,9 +74,10 @@ public class Model {
         return this.MINHEIGHT;
     }
 
-    public void addTab(Tab tab) {
+    public int addTab(Tab tab) {
         this.tabs.add(tab);
         this.view.tabAdded(tab.getName(), tab.getCurrentContent());
+        return this.tabs.indexOf(tab);
     }
 
     public void removeTab(int tabIndex) {

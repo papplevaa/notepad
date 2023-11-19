@@ -1,6 +1,8 @@
 package papplevaa;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -17,20 +19,44 @@ public class View {
         this.callback = callback;
     }
 
-    // Feel free to create separate update functions for each property separately
     public void activeTabUpdated(int activeTab) {
-        // For each publicly available property of the model ...
-        // Call update functions, which reflect the new state in the Swing components
+        this.tabbedPane.setSelectedIndex(activeTab);
     }
 
     public void tabAdded(String name, String content) {
         JTextArea textArea = new JTextArea(content);
         JScrollPane scrollPane = new JScrollPane(textArea);
-        tabbedPane.add(name, scrollPane);
+        this.tabbedPane.add(name, scrollPane);
+
+        textArea.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                fireContentChanged();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                fireContentChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // Plain text documents do not fire these kind of events.
+            }
+        });
+
+        // This makes it so you can immediately write in the text area
+        textArea.requestFocus();
     }
 
     public void tabRemoved(int tabIndex) {
         this.tabbedPane.remove(tabIndex);
+    }
+
+    private void fireContentChanged() {
+        JScrollPane selectedScrollPane = (JScrollPane) this.tabbedPane.getSelectedComponent();
+        JTextArea selectedTextArea = (JTextArea) selectedScrollPane.getViewport().getView();
+        this.callback.updateContent(selectedTextArea.getText());
     }
 
     public void updateUIManager(boolean darkMode) {
