@@ -19,7 +19,7 @@ public class Model {
         this.activeTab = -1;
         this.darkMode = true;
         this.view = view;
-        this.view.initialize(this);
+        //this.view.initialize(this);
         // Windowsize comes from view
         // Should not serialize view (make it transient?)
         //  - store window size in model

@@ -8,6 +8,7 @@ public class Controller implements CallbackHandler {
         this.view = new View();
         this.view.registerCallback(this);
         this.model = new Model(view);
+        this.view.initialize(model);
     }
 
     @Override
