@@ -19,7 +19,7 @@ public class Model {
         this.activeTab = -1;
         this.darkMode = true;
         this.view = view;
-        this.view.initialize(this);
+        //this.view.initialize(this);
         // Windowsize comes from view
         // Should not serialize view (make it transient?)
         //  - store window size in model
@@ -74,9 +74,10 @@ public class Model {
         return this.MINHEIGHT;
     }
 
-    public void addTab(Tab tab) {
+    public int addTab(Tab tab) {
         this.tabs.add(tab);
         this.view.tabAdded(tab.getName(), tab.getCurrentContent());
+        return this.tabs.indexOf(tab);
     }
 
     public void removeTab(int tabIndex) {

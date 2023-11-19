@@ -15,4 +15,5 @@ public interface CallbackHandler {
     void paste();
     void closeWindow();
     void invertTheme();
+    void updateContent(String content);
 }
