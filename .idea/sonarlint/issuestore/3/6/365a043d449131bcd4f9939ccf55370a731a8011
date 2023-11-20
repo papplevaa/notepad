@@ -1,0 +1,8 @@
+
+p	java:S116"TRename this field "MINHEIGHT" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(÷Ñ¹í8´×£Ë¾1
+t	java:S116"SRename this field "MINWIDTH" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ýÔ¶ãüÿÿÿÿ8´×£Ë¾1
+>
+java:S1170"!Make this final field static too.(÷Ñ¹í8´×£Ë¾1
+C
+java:S1170"!Make this final field static too.(ýÔ¶ãüÿÿÿÿ8´×£Ë¾1
+W	java:S125"<This block of commented-out lines of code should be removed.(ˆŒŸ!8·×£Ë¾1

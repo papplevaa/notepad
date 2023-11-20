@@ -88,6 +88,7 @@ public class View {
 
         /* ------ Tabbed Pane ------ */
         this.tabbedPane = new JTabbedPane();
+        this.tabbedPane.addChangeListener(event -> callback.updateSelectedIndex(this.tabbedPane.getSelectedIndex()));
         this.frame.add(tabbedPane);
 
         /* ------ Init LaF ------ */
@@ -206,14 +207,14 @@ public class View {
 
         textArea.getDocument().addUndoableEditListener(new UndoableEditListener() {
             @Override
-            public void undoableEditHappened(UndoableEditEvent e) {
-                textArea.getUndoManager().addEdit(e.getEdit());
+            public void undoableEditHappened(UndoableEditEvent event) {
+                textArea.getUndoManager().addEdit(event.getEdit());
             }
         });
 
         textArea.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void insertUpdate(DocumentEvent e) {
+            public void insertUpdate(DocumentEvent event) {
                 callback.updateContent(textArea.getText());
             }
 

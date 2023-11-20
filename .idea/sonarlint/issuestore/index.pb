@@ -15,3 +15,11 @@ P
  src/main/java/papplevaa/Tab.java,3\7\371384b58bc0e817114b9aab7080a0e6c9cef120
 X
 (src/main/java/papplevaa/FileHandler.java,7\f\7f1944dc50c442cfd16ffa57454d6ddb8c8bc676
+Å
+Q.idea/sonarlint/securityhotspotstore/6/e/6e065383cb900f1c41caf4b5421ab8491bc8dd3f,0\0\00599c8189c0897e0866086297368d50d29519a8
+w
+G.idea/sonarlint/issuestore/6/e/6e065383cb900f1c41caf4b5421ab8491bc8dd3f,c\f\cff5d9cfdb07224eb1303f130941f13ca3ebb5bd
+]
+-src/main/java/papplevaa/UndoableTextArea.java,3\2\32bee235773dbf1f752539d751163ac7e3e1aad5
+\
+,src/main/java/papplevaa/CallbackHandler.java,6\e\6e065383cb900f1c41caf4b5421ab8491bc8dd3f

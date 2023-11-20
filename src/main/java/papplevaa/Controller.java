@@ -112,4 +112,10 @@ public class Controller implements CallbackHandler {
         this.model.getActiveTab().setCurrentContent(newContent);
         System.out.println("Content updated");
     }
+
+    @Override
+    public void updateSelectedIndex(int selectedIndex) {
+        this.model.setActiveTabIndex(selectedIndex);
+        System.out.println("Changed tab");
+    }
 }

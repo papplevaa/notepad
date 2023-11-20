@@ -16,4 +16,5 @@ public interface CallbackHandler {
     void closeWindow();
     void invertTheme();
     void updateContent(String newContent);
+    void updateSelectedIndex(int selectedIndex);
 }
