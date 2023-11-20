@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Model {
     private final List<Tab> tabs;
-    private int activeTab;
+    private int selectedIndex;
     // Make view transient so it is not serialized?
     private View view;
     private boolean darkMode;
@@ -16,32 +16,58 @@ public class Model {
 
     public Model(View view) {
         this.tabs = new ArrayList<>();
-        this.activeTab = -1;
-        this.darkMode = true;
+        this.selectedIndex = -1;
         this.view = view;
-        //this.view.initialize(this);
-        // Windowsize comes from view
-        // Should not serialize view (make it transient?)
-        //  - store window size in model
-        //  - view initializes based on model upon start
+        this.darkMode = true;
+        this.height = this.MINHEIGHT;
+        this.width = this.MINWIDTH;
     }
 
-    public int getActiveTabIndex() {
-        return activeTab;
-    }
-
-    public Tab getActiveTab() {
-        if(tabs.isEmpty()) {
-            return null;
+    public int addTab(Tab tab) {
+        if(tab == null) {
+            throw new NullPointerException("Adding null as tab!");
         }
-        return tabs.get(activeTab);
+        this.tabs.add(tab);
+        this.view.tabAdded(tab.getName(), tab.getCurrentContent());
+        return this.tabs.indexOf(tab);
     }
 
-    public void setActiveTabIndex(int activeTab) {
-        if(activeTab < 0 || activeTab >= tabs.size())
+    public void removeTab(int tabIndex) {
+        if(tabIndex < 0 || tabIndex >= this.tabs.size()) {
             throw new IllegalArgumentException("Index is out of bounds!");
-        this.activeTab = activeTab;
-        this.view.activeTabUpdated(activeTab);
+        }
+        this.tabs.remove(tabIndex);
+        this.view.tabRemoved(tabIndex);
+        if(this.tabs.isEmpty()) {
+            this.selectedIndex = -1;
+            this.view.activeTabUpdated(this.selectedIndex);
+        }
+    }
+
+    public boolean isSelected() {
+        return this.selectedIndex != -1;
+    }
+
+    public void clearSelection() {
+        this.selectedIndex = -1;
+    }
+
+    public int getSelectedIndex() {
+        return selectedIndex;
+    }
+
+    public void setSelectedIndex(int selectedIndex) {
+        if(selectedIndex < 0 || selectedIndex >= tabs.size())
+            throw new IllegalArgumentException("Index is out of bounds!");
+        this.selectedIndex = selectedIndex;
+        this.view.activeTabUpdated(selectedIndex);
+    }
+
+    public Tab getSelectedTab() {
+        if(!isSelected()) {
+            throw new RuntimeException("No tab is selected!");
+        }
+        return this.tabs.get(selectedIndex);
     }
 
     public boolean isDarkMode() {
@@ -75,22 +101,5 @@ public class Model {
 
     public int getMinimumWindowHeight() {
         return this.MINHEIGHT;
-    }
-
-    public int addTab(Tab tab) {
-        this.tabs.add(tab);
-        this.view.tabAdded(tab.getName(), tab.getCurrentContent());
-        return this.tabs.indexOf(tab);
-    }
-
-    public void removeTab(int tabIndex) {
-        if(tabIndex <= 0 || tabIndex > tabs.size()) {
-            return;
-        }
-        tabs.remove(tabIndex);
-        if(activeTab == tabIndex) {
-            activeTab = (tabIndex - 1) % tabs.size();
-        }
-        this.view.tabRemoved(tabIndex);
     }
 }

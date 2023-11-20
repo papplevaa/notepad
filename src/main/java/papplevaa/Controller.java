@@ -15,13 +15,13 @@ public class Controller implements CallbackHandler {
     @Override
     public void newTab() {
         int idx = this.model.addTab(new Tab());
-        this.model.setActiveTabIndex(idx);
+        this.model.setSelectedIndex(idx);
         System.out.println("New tab");
     }
 
     @Override
     public void closeTab() {
-        int idx = this.model.getActiveTabIndex();
+        int idx = this.model.getSelectedIndex();
         this.model.removeTab(idx);
         //this.view.showDialogForUnsavedChanges();
         System.out.println("Close Tab");
@@ -109,13 +109,13 @@ public class Controller implements CallbackHandler {
 
     @Override
     public void updateContent(String newContent) {
-        this.model.getActiveTab().setCurrentContent(newContent);
+        this.model.getSelectedTab().setCurrentContent(newContent);
         System.out.println("Content updated");
     }
 
     @Override
     public void updateSelectedIndex(int selectedIndex) {
-        this.model.setActiveTabIndex(selectedIndex);
+        this.model.setSelectedIndex(selectedIndex);
         System.out.println("Changed tab");
     }
 }
