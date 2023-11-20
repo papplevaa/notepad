@@ -33,6 +33,9 @@ public class Model {
     }
 
     public void removeTab(int tabIndex) {
+        if(tabIndex == -1) {
+            return;
+        }
         if(tabIndex < 0 || tabIndex >= this.tabs.size()) {
             throw new IllegalArgumentException("Index is out of bounds!");
         }
@@ -40,8 +43,11 @@ public class Model {
         this.view.tabRemoved(tabIndex);
         if(this.tabs.isEmpty()) {
             this.clearSelection();
-            this.view.activeTabUpdated(this.selectedIndex);
         }
+    }
+
+    public int getNumberOfTabs() {
+        return this.tabs.size();
     }
 
     public boolean isSelected() {
@@ -57,17 +63,14 @@ public class Model {
     }
 
     public void setSelectedIndex(int selectedIndex) {
-        if(selectedIndex < 0 || selectedIndex >= tabs.size())
-            throw new IllegalArgumentException("Index is out of bounds!");
         this.selectedIndex = selectedIndex;
-        this.view.activeTabUpdated(selectedIndex);
     }
 
-    public Tab getSelectedTab() {
-        if(!isSelected()) {
-            throw new RuntimeException("No tab is selected!");
+    public Tab getTabAt(int index) {
+        if(index < 0 || index >= this.tabs.size()) {
+            throw new IllegalArgumentException("Index is out of bounds!");
         }
-        return this.tabs.get(selectedIndex);
+        return this.tabs.get(index);
     }
 
     public boolean isDarkMode() {

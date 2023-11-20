@@ -30,15 +30,13 @@ public class View {
 
     public void activeTabUpdated(int activeTab) {
         this.tabbedPane.setSelectedIndex(activeTab);
+        this.getSelectedTextArea().requestFocus();
     }
 
     public void tabAdded(String name, String content) {
         UndoableTextArea textArea = setupCustomizedJTextArea(content);
         JScrollPane scrollPane = new JScrollPane(textArea);
         this.tabbedPane.add(name, scrollPane);
-
-        // This makes it, so you can immediately write in the text area
-        textArea.requestFocus();
     }
 
     public void tabRemoved(int tabIndex) {
@@ -80,6 +78,7 @@ public class View {
                 callback.closeWindow();
             }
         });
+        // Set window size here
         this.frame.setSize(new Dimension(model.getWindowWidth(), model.getWindowHeight()));
         this.frame.setMinimumSize(new Dimension(model.getMinimumWindowWidth(), model.getMinimumWindowHeight()));
 
@@ -89,12 +88,20 @@ public class View {
         /* ------ Tabbed Pane ------ */
         this.tabbedPane = new JTabbedPane();
         this.tabbedPane.addChangeListener(event -> callback.changeTab(this.tabbedPane.getSelectedIndex()));
+        int numberOfTabs = model.getNumberOfTabs();
+        for(int index = 0; index < numberOfTabs; index++) {
+            Tab tabAtIndex = model.getTabAt(index);
+            UndoableTextArea textArea = setupCustomizedJTextArea(tabAtIndex.getCurrentContent());
+            JScrollPane scrollPane = new JScrollPane(textArea);
+            this.tabbedPane.add(tabAtIndex.getName(), scrollPane);
+        }
+        this.tabbedPane.setSelectedIndex(model.getSelectedIndex());
         this.frame.add(tabbedPane);
 
         /* ------ Init LaF ------ */
         this.updateUIManager(model.isDarkMode());
 
-        /* Set frame visible */
+        // Set frame visible
         this.frame.setVisible(true);
     }
 

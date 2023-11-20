@@ -16,6 +16,7 @@ public class Controller implements CallbackHandler {
     public void newTab() {
         int idx = this.model.addTab(new Tab());
         this.model.setSelectedIndex(idx);
+        this.view.activeTabUpdated(idx);
         System.out.println("New tab");
     }
 
@@ -44,20 +45,20 @@ public class Controller implements CallbackHandler {
 
     @Override
     public void undo() {
+        System.out.println("Undo");
         UndoableTextArea textArea = this.view.getSelectedTextArea();
         if(textArea != null) {
             textArea.undo();
         }
-        System.out.println("Undo");
     }
 
     @Override
     public void redo() {
+        System.out.println("Redo");
         UndoableTextArea textArea = this.view.getSelectedTextArea();
         if(textArea != null) {
             textArea.redo();
         }
-        System.out.println("Redo");
     }
 
     @Override
@@ -96,6 +97,9 @@ public class Controller implements CallbackHandler {
             //this.view.showDialog();
             System.out.println("Show dialog");
         } else {
+            // Get window size from view
+            // Set window size in model
+            // Serialize model for next startup
             this.view.closeFrame();
             System.out.println("Close frame");
         }
@@ -109,7 +113,7 @@ public class Controller implements CallbackHandler {
 
     @Override
     public void updateContent(String newContent) {
-        this.model.getSelectedTab().setCurrentContent(newContent);
+        this.model.getTabAt(this.model.getSelectedIndex()).setCurrentContent(newContent);
         System.out.println("Content updated");
     }
 

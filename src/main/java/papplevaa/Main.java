@@ -8,5 +8,4 @@ public class Main {
 
 
 // TODO
-// - you can not close the first tab
 // - exception thrown when copying from intellij to textarea
