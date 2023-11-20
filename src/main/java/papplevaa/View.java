@@ -7,6 +7,7 @@ import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
@@ -60,7 +61,15 @@ public class View {
         this.frame.dispose();
     }
 
+    public File chooseFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.showSaveDialog(null);
+        return fileChooser.getSelectedFile();
+    }
 
+    public void nameUpdated(String name) {
+        this.tabbedPane.setTitleAt(this.tabbedPane.getSelectedIndex(), name);
+    }
 
 
 

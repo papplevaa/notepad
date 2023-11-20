@@ -1,6 +1,10 @@
 package papplevaa;
 
 
+import java.io.File;
+
+import static papplevaa.FileUtil.*;
+
 public class Controller implements CallbackHandler {
     private View view;
     private Model model;
@@ -30,16 +34,38 @@ public class Controller implements CallbackHandler {
 
     @Override
     public void open() {
+        File filePath = this.view.chooseFile();
+        String name = getNameFromPath(filePath);
+        String lastSavedContent = loadContent(filePath);
+        this.model.addTab(new Tab(name, lastSavedContent, filePath));
         System.out.println("Open");
     }
 
     @Override
     public void save() {
+        Tab selectedTab = this.model.getTabAt(this.model.getSelectedIndex());
+        if(selectedTab.getFilePath() == null) {
+            this.saveAs();
+        } else {
+            String currentContent = selectedTab.getCurrentContent();
+            File filePath = selectedTab.getFilePath();
+            FileUtil.saveContent(currentContent, filePath);
+            selectedTab.commitChanges();
+        }
         System.out.println("Save");
     }
 
     @Override
     public void saveAs() {
+        File filePath = this.view.chooseFile();
+        Tab selectedTab = this.model.getTabAt(this.model.getSelectedIndex());
+        String name = FileUtil.getNameFromPath(filePath);
+        String currentContent = selectedTab.getCurrentContent();
+        FileUtil.saveContent(currentContent, filePath);
+        selectedTab.setName(name);
+        this.view.nameUpdated(name);
+        selectedTab.setFilePath(filePath);
+        selectedTab.commitChanges();
         System.out.println("Save as");
     }
 
@@ -119,7 +145,9 @@ public class Controller implements CallbackHandler {
 
     @Override
     public void changeTab(int selectedIndex) {
-        this.model.setSelectedIndex(selectedIndex);
+        if(this.model.getSelectedIndex() != selectedIndex) {
+            this.model.setSelectedIndex(selectedIndex);
+        }
         System.out.println("Changed tab");
     }
 }
