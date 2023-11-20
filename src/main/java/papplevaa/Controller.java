@@ -114,7 +114,7 @@ public class Controller implements CallbackHandler {
     }
 
     @Override
-    public void updateSelectedIndex(int selectedIndex) {
+    public void changeTab(int selectedIndex) {
         this.model.setSelectedIndex(selectedIndex);
         System.out.println("Changed tab");
     }

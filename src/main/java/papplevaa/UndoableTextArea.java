@@ -5,6 +5,7 @@ import javax.swing.undo.UndoManager;
 
 public class UndoableTextArea extends JTextArea {
     private UndoManager undoManager;
+
     public UndoableTextArea(String content) {
         super(content);
         this.undoManager = new UndoManager();

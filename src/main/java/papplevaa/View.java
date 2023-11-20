@@ -88,7 +88,7 @@ public class View {
 
         /* ------ Tabbed Pane ------ */
         this.tabbedPane = new JTabbedPane();
-        this.tabbedPane.addChangeListener(event -> callback.updateSelectedIndex(this.tabbedPane.getSelectedIndex()));
+        this.tabbedPane.addChangeListener(event -> callback.changeTab(this.tabbedPane.getSelectedIndex()));
         this.frame.add(tabbedPane);
 
         /* ------ Init LaF ------ */

@@ -11,16 +11,16 @@ public class Model {
     private boolean darkMode;
     private int height;
     private int width;
-    private final int MINHEIGHT = 240;
-    private final int MINWIDTH = 320;
+    private static final int MINHEIGHT = 240;
+    private static final int MINWIDTH = 320;
 
     public Model(View view) {
         this.tabs = new ArrayList<>();
         this.selectedIndex = -1;
         this.view = view;
         this.darkMode = true;
-        this.height = this.MINHEIGHT;
-        this.width = this.MINWIDTH;
+        this.height = Model.MINHEIGHT;
+        this.width = Model.MINWIDTH;
     }
 
     public int addTab(Tab tab) {
@@ -39,7 +39,7 @@ public class Model {
         this.tabs.remove(tabIndex);
         this.view.tabRemoved(tabIndex);
         if(this.tabs.isEmpty()) {
-            this.selectedIndex = -1;
+            this.clearSelection();
             this.view.activeTabUpdated(this.selectedIndex);
         }
     }
@@ -88,7 +88,7 @@ public class Model {
     }
 
     public int getMinimumWindowWidth() {
-        return this.MINWIDTH;
+        return Model.MINWIDTH;
     }
 
     public int getWindowHeight() {
@@ -100,6 +100,6 @@ public class Model {
     }
 
     public int getMinimumWindowHeight() {
-        return this.MINHEIGHT;
+        return Model.MINHEIGHT;
     }
 }
