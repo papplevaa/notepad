@@ -1,18 +1,16 @@
 package papplevaa;
 
-
 import java.io.File;
-
 import static papplevaa.FileUtil.*;
 
 public class Controller implements CallbackHandler {
     private View view;
     private Model model;
 
-    public Controller() {
-        this.view = new View();
+    public Controller(View view, Model model) {
+        this.view = view;
         this.view.registerCallback(this);
-        this.model = new Model();
+        this.model = model;
         this.view.initialize(model);
     }
 

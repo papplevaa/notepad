@@ -2,7 +2,9 @@ package papplevaa;
 
 public class Main {
     public static void main(String[] args) {
-        Controller controller = new Controller();
+        View SwingGUI = new View();
+        Model model = new Model();
+        Controller controller = new Controller(SwingGUI, model);
     }
 }
 
