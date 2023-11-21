@@ -93,7 +93,9 @@ public class View {
         return selectedFile;
     }
 
-
+    public int showDialog() {
+        return JOptionPane.showConfirmDialog(this.frame, "Do you want to save changes?", "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
+    }
 
     /* Private methods to improve code readability */
     private void initFrame(Model model) {

@@ -1,7 +1,6 @@
 package papplevaa;
 
 import java.io.File;
-import static papplevaa.FileUtil.*;
 
 public class Controller implements CallbackHandler {
     private View view;
@@ -26,18 +25,33 @@ public class Controller implements CallbackHandler {
 
     @Override
     public void closeTab() {
+        if(!this.model.isSelected()) {
+            return;
+        }
         int idx = this.model.getSelectedIndex();
-        this.model.removeTab(idx);
-        this.view.removeTab(idx);
-        //this.view.showDialogForUnsavedChanges();
+        Tab selectedTab = this.model.getTabAt(idx);
+        if(!selectedTab.getCurrentContent().equals(selectedTab.getLastSavedContent())) {
+            int result = this.view.showDialog();
+            if(result == 0) {
+                this.save();
+                this.model.removeTab(idx);
+                this.view.removeTab(idx);
+            } else if (result == 1) {
+                this.model.removeTab(idx);
+                this.view.removeTab(idx);
+            }
+        } else {
+            this.model.removeTab(idx);
+            this.view.removeTab(idx);
+        }
         System.out.println("Close Tab");
     }
 
     @Override
     public void open() {
         File filePath = this.view.chooseFile(false);
-        String name = getNameFromPath(filePath);
-        String lastSavedContent = loadContent(filePath);
+        String name = FileUtil.getNameFromPath(filePath);
+        String lastSavedContent = FileUtil.loadContent(filePath);
         this.model.addTab(new Tab(name, lastSavedContent, filePath));
         System.out.println("Open");
     }
