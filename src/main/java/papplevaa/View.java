@@ -272,6 +272,7 @@ public class View {
     }
 
     private void initTabbedPane(Model model) {
+        this.tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         this.createTabsFromModel(model);
         this.tabbedPane.setSelectedIndex(model.getSelectedIndex());
         this.tabbedPane.addChangeListener(event -> callback.changeTab(this.tabbedPane.getSelectedIndex()));
