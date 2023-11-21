@@ -20,7 +20,7 @@ public class Controller implements CallbackHandler {
     public void newTab() {
         int idx = this.model.addTab(new Tab());
         this.model.setSelectedIndex(idx);
-        this.view.activeTabUpdated(idx);
+        this.view.changeSelectedTab(idx);
         System.out.println("New tab");
     }
 
@@ -71,7 +71,7 @@ public class Controller implements CallbackHandler {
         String currentContent = selectedTab.getCurrentContent();
         FileUtil.saveContent(currentContent, filePath);
         selectedTab.setName(name);
-        this.view.nameUpdated(name);
+        this.view.updateName(name);
         selectedTab.setFilePath(filePath);
         selectedTab.commitChanges();
         System.out.println("Save as");

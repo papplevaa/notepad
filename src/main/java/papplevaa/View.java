@@ -1,14 +1,10 @@
 package papplevaa;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.UndoableEditEvent;
-import javax.swing.event.UndoableEditListener;
+import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
@@ -17,6 +13,25 @@ public class View {
     private JFrame frame;
     private JTabbedPane tabbedPane;
 
+    /* Methods for initialization */
+    public View() {
+        this.frame = new JFrame("Notepad");
+        this.tabbedPane = new JTabbedPane();
+    }
+
+    public void registerCallback(CallbackHandler callback) {
+        this.callback = callback;
+    }
+
+    public void initialize(Model model) {
+        this.initFrame(model);
+        this.initMenu();
+        this.initTabbedPane(model);
+        this.setDarkMode(model.isDarkMode());
+        this.frame.setVisible(true);
+    }
+
+    /* Method to reach the selected text area */
     // returns null if tabbedPane has no panes
     public UndoableTextArea getSelectedTextArea() {
         JScrollPane scrollPane = (JScrollPane) tabbedPane.getSelectedComponent();
@@ -24,27 +39,29 @@ public class View {
             return null;
         return (UndoableTextArea) scrollPane.getViewport().getView();
     }
-    
-    public void registerCallback(CallbackHandler callback) {
-        this.callback = callback;
+
+    /* Methods for updates */
+    public void updateName(String name) {
+        this.tabbedPane.setTitleAt(this.tabbedPane.getSelectedIndex(), name);
     }
 
-    public void activeTabUpdated(int activeTab) {
+    public void changeSelectedTab(int activeTab) {
         this.tabbedPane.setSelectedIndex(activeTab);
         this.getSelectedTextArea().requestFocus();
     }
 
-    public void tabAdded(String name, String content) {
-        UndoableTextArea textArea = setupCustomizedJTextArea(content);
+    public void addTab(String name, String content) {
+        UndoableTextArea textArea = setupCustomizedTextArea();
+        textArea.setText(content);
         JScrollPane scrollPane = new JScrollPane(textArea);
         this.tabbedPane.add(name, scrollPane);
     }
 
-    public void tabRemoved(int tabIndex) {
+    public void removeTab(int tabIndex) {
         this.tabbedPane.remove(tabIndex);
     }
 
-    public void updateUIManager(boolean darkMode) {
+    public void setDarkMode(boolean darkMode) {
         try {
             if(darkMode) {
                 UIManager.setLookAndFeel(new FlatDarkLaf());
@@ -61,24 +78,16 @@ public class View {
         this.frame.dispose();
     }
 
+    /* Methods for showing dialogs */
     public File chooseFile() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.showSaveDialog(null);
         return fileChooser.getSelectedFile();
     }
 
-    public void nameUpdated(String name) {
-        this.tabbedPane.setTitleAt(this.tabbedPane.getSelectedIndex(), name);
-    }
 
-
-
-
-
-
-    public void initialize(Model model) {
-        /* ------ Frame ------ */
-        this.frame = new JFrame("Notepad");
+    /* Private methods to improve code readability */
+    private void initFrame(Model model) {
         // Set custom close operation here
         this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.frame.addWindowListener(new WindowAdapter() {
@@ -90,28 +99,6 @@ public class View {
         // Set window size here
         this.frame.setSize(new Dimension(model.getWindowWidth(), model.getWindowHeight()));
         this.frame.setMinimumSize(new Dimension(model.getMinimumWindowWidth(), model.getMinimumWindowHeight()));
-
-        /* ------ Menubar ------ */
-        this.initMenu();
-
-        /* ------ Tabbed Pane ------ */
-        this.tabbedPane = new JTabbedPane();
-        this.tabbedPane.addChangeListener(event -> callback.changeTab(this.tabbedPane.getSelectedIndex()));
-        int numberOfTabs = model.getNumberOfTabs();
-        for(int index = 0; index < numberOfTabs; index++) {
-            Tab tabAtIndex = model.getTabAt(index);
-            UndoableTextArea textArea = setupCustomizedJTextArea(tabAtIndex.getCurrentContent());
-            JScrollPane scrollPane = new JScrollPane(textArea);
-            this.tabbedPane.add(tabAtIndex.getName(), scrollPane);
-        }
-        this.tabbedPane.setSelectedIndex(model.getSelectedIndex());
-        this.frame.add(tabbedPane);
-
-        /* ------ Init LaF ------ */
-        this.updateUIManager(model.isDarkMode());
-
-        // Set frame visible
-        this.frame.setVisible(true);
     }
 
     public void initMenu() {
@@ -121,7 +108,6 @@ public class View {
 
         /* --- File Menu --- */
         JMenu menu = new JMenu("File");
-        // Add ALT + F as accelerator?
         menuBar.add(menu);
 
         // New Tab menu item
@@ -166,7 +152,6 @@ public class View {
 
         /* --- Edit Menu --- */
         menu = new JMenu("Edit");
-        // Add ALT + E as accelerator?
         menuBar.add(menu);
 
         // Undo menu item
@@ -218,8 +203,8 @@ public class View {
         menuBar.add(button);
     }
 
-    private UndoableTextArea setupCustomizedJTextArea(String content) {
-        UndoableTextArea textArea = new UndoableTextArea(content);
+    private UndoableTextArea setupCustomizedTextArea() {
+        UndoableTextArea textArea = new UndoableTextArea();
 
         textArea.getDocument().addUndoableEditListener(new UndoableEditListener() {
             @Override
@@ -276,5 +261,23 @@ public class View {
         );
 
         return textArea;
+    }
+
+    private void initTabbedPane(Model model) {
+        this.tabbedPane.addChangeListener(event -> callback.changeTab(this.tabbedPane.getSelectedIndex()));
+        this.createTabsFromModel(model);
+        this.tabbedPane.setSelectedIndex(model.getSelectedIndex());
+        this.frame.add(tabbedPane);
+    }
+
+    private void createTabsFromModel(Model model) {
+        int numberOfTabs = model.getNumberOfTabs();
+        for(int index = 0; index < numberOfTabs; index++) {
+            Tab tabAtIndex = model.getTabAt(index);
+            UndoableTextArea textArea = setupCustomizedTextArea();
+            textArea.setText(tabAtIndex.getCurrentContent());
+            JScrollPane scrollPane = new JScrollPane(textArea);
+            this.tabbedPane.add(tabAtIndex.getName(), scrollPane);
+        }
     }
 }

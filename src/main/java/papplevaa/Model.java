@@ -28,7 +28,7 @@ public class Model {
             throw new NullPointerException("Adding null as tab!");
         }
         this.tabs.add(tab);
-        this.view.tabAdded(tab.getName(), tab.getCurrentContent());
+        this.view.addTab(tab.getName(), tab.getCurrentContent());
         return this.tabs.indexOf(tab);
     }
 
@@ -40,7 +40,7 @@ public class Model {
             throw new IllegalArgumentException("Index is out of bounds!");
         }
         this.tabs.remove(tabIndex);
-        this.view.tabRemoved(tabIndex);
+        this.view.removeTab(tabIndex);
         if(this.tabs.isEmpty()) {
             this.clearSelection();
         }
@@ -79,7 +79,7 @@ public class Model {
 
     public void setDarkMode(boolean darkMode) {
         this.darkMode = darkMode;
-        this.view.updateUIManager(darkMode);
+        this.view.setDarkMode(darkMode);
     }
 
     public int getWindowWidth() {
