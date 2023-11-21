@@ -1,5 +1,7 @@
 package papplevaa;
 
+import java.io.*;
+
 public class Controller implements CallbackHandler {
     private View view;
     private Model model;
@@ -7,8 +9,14 @@ public class Controller implements CallbackHandler {
     public Controller(View view, Model model) {
         this.view = view;
         this.view.registerCallback(this);
-        this.model = model;
-        this.view.initialize(model);
+        try {
+            this.deserializeModel();
+        } catch (Exception exception) {
+            this.model = model;
+            exception.printStackTrace();
+            System.out.println("Could not load data from previous session");
+        }
+        this.view.initialize(this.model);
     }
 
     @Override
@@ -54,7 +62,7 @@ public class Controller implements CallbackHandler {
     @Override
     public void open() {
         // Get path to open
-        java.io.File filePath = this.view.chooseFile(false);
+        File filePath = this.view.chooseFile(false);
         if(filePath == null) {
             System.out.println("No file chosen!");
             return;
@@ -64,8 +72,10 @@ public class Controller implements CallbackHandler {
         String lastSavedContent = FileUtil.loadContent(filePath);
         Tab openedTab = new Tab(name, lastSavedContent, filePath);
         // Add tab to the model and view
-        this.model.addTab(openedTab);
+        int idx = this.model.addTab(openedTab);
         this.view.addTab(openedTab.getName(), openedTab.getCurrentContent());
+        this.model.setSelectedIndex(idx);
+        this.view.changeSelectedTab(idx);
         // Log
         System.out.println("Open");
     }
@@ -84,7 +94,7 @@ public class Controller implements CallbackHandler {
             this.saveAs();
         } else {
             String currentContent = selectedTab.getCurrentContent();
-            java.io.File filePath = selectedTab.getFilePath();
+            File filePath = selectedTab.getFilePath();
             FileUtil.saveContent(currentContent, filePath);
             selectedTab.commitChanges();
         }
@@ -100,7 +110,7 @@ public class Controller implements CallbackHandler {
         }
         Tab selectedTab = this.model.getTabAt(this.model.getSelectedIndex());
         // Choose save path
-        java.io.File filePath = this.view.chooseFile(true);
+        File filePath = this.view.chooseFile(true);
         if(filePath == null) {
             System.out.println("No file chosen!");
             return;
@@ -180,6 +190,11 @@ public class Controller implements CallbackHandler {
             // Get window size from view
             // Set window size in model
             // Serialize model for next startup
+            try {
+                this.serializeModel();
+            } catch(IOException exception) {
+                System.out.println("Could not save data for next session");
+            }
             this.view.closeFrame();
             System.out.println("Close frame");
         }
@@ -204,6 +219,32 @@ public class Controller implements CallbackHandler {
         if(this.model.getSelectedIndex() != selectedIndex) {
             this.model.setSelectedIndex(selectedIndex);
             System.out.println("Changed tab");
+        }
+    }
+
+    private void serializeModel() throws IOException {
+        ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(Model.getDataPath()));
+        stream.writeObject(this.model);
+        stream.close();
+
+        for(int i = 0; i < model.getNumberOfTabs(); i++) {
+            Tab tab = model.getTabAt(i);
+            System.out.println(tab.getName());
+            System.out.println(tab.getCurrentContent());
+            System.out.println(tab.getLastSavedContent());
+        }
+    }
+
+    private void deserializeModel() throws IOException, ClassNotFoundException {
+        ObjectInputStream stream = new ObjectInputStream(new FileInputStream(Model.getDataPath()));
+        this.model = (Model) stream.readObject();
+        stream.close();
+
+        for(int i = 0; i < model.getNumberOfTabs(); i++) {
+            Tab tab = model.getTabAt(i);
+            System.out.println(tab.getName());
+            System.out.println(tab.getCurrentContent());
+            System.out.println(tab.getLastSavedContent());
         }
     }
 }

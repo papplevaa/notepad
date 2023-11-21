@@ -1,10 +1,13 @@
 package papplevaa;
 
+import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Model {
-    private final List<Tab> tabs;
+public class Model implements Serializable {
+    private static final File data = new File(System.getProperty("user.home") + File.separator + "notepad.data");
+    private List<Tab> tabs;
     private int selectedIndex;
     private boolean darkMode;
     private int height;
@@ -18,6 +21,10 @@ public class Model {
         this.darkMode = true;
         this.height = Model.MINHEIGHT;
         this.width = Model.MINWIDTH;
+    }
+
+    public static File getDataPath() {
+        return data;
     }
 
     public int addTab(Tab tab) {

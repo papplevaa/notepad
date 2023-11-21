@@ -29,6 +29,7 @@ public class View {
         this.initTabbedPane(model);
         this.setDarkMode(model.isDarkMode());
         this.frame.setVisible(true);
+        this.getSelectedTextArea().requestFocus();
     }
 
     /* Method to reach the selected text area */
@@ -51,8 +52,8 @@ public class View {
     }
 
     public void addTab(String name, String content) {
-        UndoableTextArea textArea = setupCustomizedTextArea();
-        textArea.setText(content);
+        UndoableTextArea textArea = new UndoableTextArea(content);
+        this.setupCustomizedTextArea(textArea);
         JScrollPane scrollPane = new JScrollPane(textArea);
         this.tabbedPane.add(name, scrollPane);
     }
@@ -214,9 +215,7 @@ public class View {
         menuBar.add(button);
     }
 
-    private UndoableTextArea setupCustomizedTextArea() {
-        UndoableTextArea textArea = new UndoableTextArea();
-
+    private void setupCustomizedTextArea(UndoableTextArea textArea) {
         textArea.getDocument().addUndoableEditListener(new UndoableEditListener() {
             @Override
             public void undoableEditHappened(UndoableEditEvent event) {
@@ -270,14 +269,12 @@ public class View {
                     }
                 }
         );
-
-        return textArea;
     }
 
     private void initTabbedPane(Model model) {
-        this.tabbedPane.addChangeListener(event -> callback.changeTab(this.tabbedPane.getSelectedIndex()));
         this.createTabsFromModel(model);
         this.tabbedPane.setSelectedIndex(model.getSelectedIndex());
+        this.tabbedPane.addChangeListener(event -> callback.changeTab(this.tabbedPane.getSelectedIndex()));
         this.frame.add(tabbedPane);
     }
 
@@ -285,9 +282,12 @@ public class View {
         int numberOfTabs = model.getNumberOfTabs();
         for(int index = 0; index < numberOfTabs; index++) {
             Tab tabAtIndex = model.getTabAt(index);
-            UndoableTextArea textArea = setupCustomizedTextArea();
-            textArea.setText(tabAtIndex.getCurrentContent());
+            UndoableTextArea textArea = new UndoableTextArea();
             JScrollPane scrollPane = new JScrollPane(textArea);
+            textArea.setText(tabAtIndex.getCurrentContent());
+            // The documentListener should be added after creating the text area
+            // Else its content will be instantly changed to the already opened tab
+            this.setupCustomizedTextArea(textArea);
             this.tabbedPane.add(tabAtIndex.getName(), scrollPane);
         }
     }

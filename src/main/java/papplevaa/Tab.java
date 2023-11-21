@@ -1,8 +1,9 @@
 package papplevaa;
 
 import java.io.File;
+import java.io.Serializable;
 
-public class Tab {
+public class Tab implements Serializable {
     private File filePath;
     private String name;
     private String lastSaved;
