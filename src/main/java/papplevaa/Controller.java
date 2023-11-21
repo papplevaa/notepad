@@ -226,25 +226,11 @@ public class Controller implements CallbackHandler {
         ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(Model.getDataPath()));
         stream.writeObject(this.model);
         stream.close();
-
-        for(int i = 0; i < model.getNumberOfTabs(); i++) {
-            Tab tab = model.getTabAt(i);
-            System.out.println(tab.getName());
-            System.out.println(tab.getCurrentContent());
-            System.out.println(tab.getLastSavedContent());
-        }
     }
 
     private void deserializeModel() throws IOException, ClassNotFoundException {
         ObjectInputStream stream = new ObjectInputStream(new FileInputStream(Model.getDataPath()));
         this.model = (Model) stream.readObject();
         stream.close();
-
-        for(int i = 0; i < model.getNumberOfTabs(); i++) {
-            Tab tab = model.getTabAt(i);
-            System.out.println(tab.getName());
-            System.out.println(tab.getCurrentContent());
-            System.out.println(tab.getLastSavedContent());
-        }
     }
 }
