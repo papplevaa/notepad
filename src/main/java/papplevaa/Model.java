@@ -6,18 +6,15 @@ import java.util.List;
 public class Model {
     private final List<Tab> tabs;
     private int selectedIndex;
-    // Make view transient so it is not serialized?
-    private View view;
     private boolean darkMode;
     private int height;
     private int width;
     private static final int MINHEIGHT = 240;
     private static final int MINWIDTH = 320;
 
-    public Model(View view) {
+    public Model() {
         this.tabs = new ArrayList<>();
         this.selectedIndex = -1;
-        this.view = view;
         this.darkMode = true;
         this.height = Model.MINHEIGHT;
         this.width = Model.MINWIDTH;
@@ -28,7 +25,6 @@ public class Model {
             throw new NullPointerException("Adding null as tab!");
         }
         this.tabs.add(tab);
-        this.view.addTab(tab.getName(), tab.getCurrentContent());
         return this.tabs.indexOf(tab);
     }
 
@@ -40,7 +36,6 @@ public class Model {
             throw new IllegalArgumentException("Index is out of bounds!");
         }
         this.tabs.remove(tabIndex);
-        this.view.removeTab(tabIndex);
         if(this.tabs.isEmpty()) {
             this.clearSelection();
         }
@@ -79,7 +74,6 @@ public class Model {
 
     public void setDarkMode(boolean darkMode) {
         this.darkMode = darkMode;
-        this.view.setDarkMode(darkMode);
     }
 
     public int getWindowWidth() {

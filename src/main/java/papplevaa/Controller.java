@@ -12,13 +12,15 @@ public class Controller implements CallbackHandler {
     public Controller() {
         this.view = new View();
         this.view.registerCallback(this);
-        this.model = new Model(view);
+        this.model = new Model();
         this.view.initialize(model);
     }
 
     @Override
     public void newTab() {
-        int idx = this.model.addTab(new Tab());
+        Tab newTab = new Tab();
+        int idx = this.model.addTab(newTab);
+        this.view.addTab(newTab.getName(), newTab.getCurrentContent());
         this.model.setSelectedIndex(idx);
         this.view.changeSelectedTab(idx);
         System.out.println("New tab");
@@ -28,6 +30,7 @@ public class Controller implements CallbackHandler {
     public void closeTab() {
         int idx = this.model.getSelectedIndex();
         this.model.removeTab(idx);
+        this.view.removeTab(idx);
         //this.view.showDialogForUnsavedChanges();
         System.out.println("Close Tab");
     }
@@ -142,6 +145,7 @@ public class Controller implements CallbackHandler {
     @Override
     public void invertTheme() {
         this.model.setDarkMode(!this.model.isDarkMode());
+        this.view.setDarkMode(!this.model.isDarkMode());
         System.out.println("Theme changed");
     }
 
