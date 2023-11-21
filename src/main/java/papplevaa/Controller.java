@@ -37,7 +37,7 @@ public class Controller implements CallbackHandler {
 
     @Override
     public void open() {
-        File filePath = this.view.chooseFile();
+        File filePath = this.view.chooseFile(false);
         String name = getNameFromPath(filePath);
         String lastSavedContent = loadContent(filePath);
         this.model.addTab(new Tab(name, lastSavedContent, filePath));
@@ -69,7 +69,7 @@ public class Controller implements CallbackHandler {
             return;
         }
         Tab selectedTab = this.model.getTabAt(this.model.getSelectedIndex());
-        File filePath = this.view.chooseFile();
+        File filePath = this.view.chooseFile(true);
         String name = FileUtil.getNameFromPath(filePath);
         String currentContent = selectedTab.getCurrentContent();
         FileUtil.saveContent(currentContent, filePath);

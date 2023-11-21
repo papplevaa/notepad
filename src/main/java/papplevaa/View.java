@@ -79,11 +79,20 @@ public class View {
     }
 
     /* Methods for showing dialogs */
-    public File chooseFile() {
+    public File chooseFile(boolean save) {
+        File selectedFile = null;
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.showSaveDialog(null);
-        return fileChooser.getSelectedFile();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        int result =
+            save
+                ? fileChooser.showSaveDialog(this.frame)
+                : fileChooser.showOpenDialog(this.frame);
+        if(result == JFileChooser.APPROVE_OPTION) {
+            selectedFile = fileChooser.getSelectedFile();
+        }
+        return selectedFile;
     }
+
 
 
     /* Private methods to improve code readability */
