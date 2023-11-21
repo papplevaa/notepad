@@ -11,8 +11,8 @@ public class Tab {
     public Tab() {
         this.filePath = null;
         this.name = "Untitled";
-        this.lastSaved = null;
-        this.current = "";
+        this.lastSaved = "";
+        this.current = this.lastSaved;
     }
 
     public Tab(String name, String lastSavedContent, File filePath) {

@@ -7,10 +7,6 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class FileUtil {
-    public static String getNameFromPath(File filePath) {
-        return filePath.getName();
-    }
-
     public static String loadContent(File filePath) {
         StringBuilder content = new StringBuilder();
         try (Scanner scanner = new Scanner(filePath)) {

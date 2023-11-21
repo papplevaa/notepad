@@ -29,14 +29,12 @@ public class UndoableTextArea extends JTextArea {
     public void undo() {
         if(this.undoManager.canUndo()) {
             this.undoManager.undo();
-            System.out.println("Undo request proccessed succesfully");
         }
     }
 
     public void redo() {
         if(this.undoManager.canRedo()) {
             this.undoManager.redo();
-            System.out.println("Redo request proccessed succesfully");
         }
     }
 
