@@ -43,6 +43,10 @@ public class Controller implements CallbackHandler {
 
     @Override
     public void save() {
+        if(!this.model.isSelected()) {
+            System.out.println("No tab is selected!");
+            return;
+        }
         Tab selectedTab = this.model.getTabAt(this.model.getSelectedIndex());
         if(selectedTab.getFilePath() == null) {
             this.saveAs();
@@ -57,8 +61,12 @@ public class Controller implements CallbackHandler {
 
     @Override
     public void saveAs() {
-        File filePath = this.view.chooseFile();
+        if(!this.model.isSelected()) {
+            System.out.println("No tab is selected!");
+            return;
+        }
         Tab selectedTab = this.model.getTabAt(this.model.getSelectedIndex());
+        File filePath = this.view.chooseFile();
         String name = FileUtil.getNameFromPath(filePath);
         String currentContent = selectedTab.getCurrentContent();
         FileUtil.saveContent(currentContent, filePath);
