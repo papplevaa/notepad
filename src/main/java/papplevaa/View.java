@@ -114,6 +114,14 @@ public class View {
         // Set window size here
         this.frame.setSize(new Dimension(model.getWindowWidth(), model.getWindowHeight()));
         this.frame.setMinimumSize(new Dimension(model.getMinimumWindowWidth(), model.getMinimumWindowHeight()));
+        // Add to listener for window size
+        this.frame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                super.componentResized(e);
+                callback.updateFrameSize(frame.getWidth(), frame.getHeight());
+            }
+        });
     }
 
     public void initMenu() {

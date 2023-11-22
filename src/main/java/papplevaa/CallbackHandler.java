@@ -16,5 +16,6 @@ public interface CallbackHandler {
     void closeWindow();
     void invertTheme();
     void updateContent(String newContent);
+    void updateFrameSize(int width, int height);
     void changeTab(int selectedIndex);
 }

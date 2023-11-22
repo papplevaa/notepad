@@ -215,6 +215,13 @@ public class Controller implements CallbackHandler {
     }
 
     @Override
+    public void updateFrameSize(int width, int height) {
+        this.model.setWindowWidth(width);
+        this.model.setWindowHeight(height);
+        //System.out.println("Frame resized");
+    }
+
+    @Override
     public void changeTab(int selectedIndex) {
         if(this.model.getSelectedIndex() != selectedIndex) {
             this.model.setSelectedIndex(selectedIndex);

@@ -1,7 +1,6 @@
 package papplevaa;
 
 import java.io.*;
-import java.util.Scanner;
 
 public final class FileUtil {
     private FileUtil() {}
