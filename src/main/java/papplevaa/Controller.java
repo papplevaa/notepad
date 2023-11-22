@@ -9,12 +9,8 @@ public class Controller implements CallbackHandler {
     public Controller(View view, Model model) {
         this.view = view;
         this.view.registerCallback(this);
-        try {
-            this.deserializeModel();
-        } catch (Exception exception) {
+        if(!this.deserializeModel()) {
             this.model = model;
-            exception.printStackTrace();
-            System.out.println("Could not load data from previous session");
         }
         this.view.initialize(this.model);
     }
@@ -180,24 +176,9 @@ public class Controller implements CallbackHandler {
 
     @Override
     public void closeWindow() {
-        // Ask model if there are modified tabs
-        // if true, show are you sure? dialog
-        // else close window
-        if(false) {
-            //this.view.showDialog();
-            System.out.println("Show dialog");
-        } else {
-            // Get window size from view
-            // Set window size in model
-            // Serialize model for next startup
-            try {
-                this.serializeModel();
-            } catch(IOException exception) {
-                System.out.println("Could not save data for next session");
-            }
-            this.view.closeFrame();
-            System.out.println("Close frame");
-        }
+        this.serializeModel();
+        this.view.closeFrame();
+        System.out.println("Close frame");
     }
 
     @Override
@@ -229,15 +210,21 @@ public class Controller implements CallbackHandler {
         }
     }
 
-    private void serializeModel() throws IOException {
-        ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(Model.getDataPath()));
-        stream.writeObject(this.model);
-        stream.close();
+    private void serializeModel() {
+        try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(Model.getDataPath()))) {
+            stream.writeObject(this.model);
+        } catch (IOException exception) {
+            System.out.println("Failed to save data for next session");
+        }
     }
 
-    private void deserializeModel() throws IOException, ClassNotFoundException {
-        ObjectInputStream stream = new ObjectInputStream(new FileInputStream(Model.getDataPath()));
-        this.model = (Model) stream.readObject();
-        stream.close();
+    private boolean deserializeModel() {
+        try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(Model.getDataPath()))) {
+            this.model = (Model) stream.readObject();
+        } catch (IOException | ClassNotFoundException exception) {
+            System.out.println("Failed to load data from previous session");
+            return false;
+        }
+        return true;
     }
 }
