@@ -1,21 +1,21 @@
 package papplevaa;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
-public class FileUtil {
+public final class FileUtil {
+    private FileUtil() {}
+
     public static String loadContent(File filePath) {
         StringBuilder content = new StringBuilder();
-        try (Scanner scanner = new Scanner(filePath)) {
-            while (scanner.hasNextLine()) {
-                content.append(scanner.nextLine());
-                content.append(System.lineSeparator());
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            while (reader.ready()) {
+                String line = reader.readLine();
+                content.append(line);
             }
-        } catch (FileNotFoundException exception) {
-            exception.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("Failed to load content");
+            return null;
         }
         return content.toString();
     }
@@ -24,7 +24,7 @@ public class FileUtil {
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(currentContent);
         } catch (IOException exception) {
-            exception.printStackTrace();
+            System.out.println("Failed to save content");
         }
     }
 }

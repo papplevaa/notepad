@@ -29,7 +29,10 @@ public class View {
         this.initTabbedPane(model);
         this.setDarkMode(model.isDarkMode());
         this.frame.setVisible(true);
-        this.getSelectedTextArea().requestFocus();
+        UndoableTextArea selectedTextArea = this.getSelectedTextArea();
+        if(selectedTextArea != null) {
+            selectedTextArea.requestFocus();
+        }
     }
 
     /* Method to reach the selected text area */
