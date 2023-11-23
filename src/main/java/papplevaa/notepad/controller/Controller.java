@@ -26,7 +26,7 @@ public class Controller implements CallbackHandler {
         Tab newTab = new Tab();
         // Add tab to model and view
         this.model.addTab(newTab);
-        int index = this.model.getIndexOfTab(newTab);
+        int index = this.model.indexOfTab(newTab);
         this.view.addTab(newTab.getName(), newTab.getCurrentContent());
         // Set new tab as selected in both model and view
         this.model.setSelectedIndex(index);
@@ -75,7 +75,7 @@ public class Controller implements CallbackHandler {
         Tab openedTab = new Tab(name, lastSavedContent, filePath);
         // Add tab to the model and view
         this.model.addTab(openedTab);
-        int index = this.model.getIndexOfTab(openedTab);
+        int index = this.model.indexOfTab(openedTab);
         this.view.addTab(openedTab.getName(), openedTab.getCurrentContent());
         this.model.setSelectedIndex(index);
         this.view.changeSelectedTab(index);

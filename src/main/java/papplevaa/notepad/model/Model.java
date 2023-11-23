@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class Model implements Serializable {
     private static final File data = new File(System.getProperty("user.home") + File.separator + "notepad.data");
@@ -67,8 +68,12 @@ public class Model implements Serializable {
         return this.tabs.get(index);
     }
 
-    public int getIndexOfTab(Tab tab) {
-        return this.tabs.indexOf(tab);
+    public int indexOfTab(Tab tab) {
+        int index = this.tabs.indexOf(tab);
+        if(index == -1) {
+            throw new NoSuchElementException("No such tab in model");
+        }
+        return index;
     }
 
     public boolean isDarkMode() {
