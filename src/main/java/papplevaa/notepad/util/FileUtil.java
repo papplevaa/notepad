@@ -1,4 +1,4 @@
-package papplevaa;
+package papplevaa.notepad.util;
 
 import java.io.*;
 

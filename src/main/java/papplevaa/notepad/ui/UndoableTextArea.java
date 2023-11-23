@@ -1,4 +1,4 @@
-package papplevaa;
+package papplevaa.notepad.ui;
 
 import javax.swing.*;
 import javax.swing.text.Document;

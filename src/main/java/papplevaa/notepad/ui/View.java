@@ -1,4 +1,4 @@
-package papplevaa;
+package papplevaa.notepad.ui;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -7,6 +7,9 @@ import java.awt.event.*;
 import java.io.File;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import papplevaa.notepad.model.Model;
+import papplevaa.notepad.model.Tab;
+import papplevaa.notepad.controller.CallbackHandler;
 
 public class View {
     private CallbackHandler callback;

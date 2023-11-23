@@ -1,4 +1,10 @@
-package papplevaa;
+package papplevaa.notepad.controller;
+
+import papplevaa.notepad.model.Model;
+import papplevaa.notepad.model.Tab;
+import papplevaa.notepad.ui.UndoableTextArea;
+import papplevaa.notepad.ui.View;
+import papplevaa.notepad.util.FileUtil;
 
 import java.io.*;
 

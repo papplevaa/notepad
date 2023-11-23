@@ -1,4 +1,4 @@
-package papplevaa;
+package papplevaa.notepad.model;
 
 import java.io.File;
 import java.io.Serializable;
