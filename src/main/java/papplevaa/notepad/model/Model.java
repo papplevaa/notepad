@@ -36,15 +36,12 @@ public class Model implements Serializable {
     }
 
     public void removeTab(int tabIndex) {
-        if(tabIndex == -1) {
-            return;
-        }
         if(tabIndex < 0 || tabIndex >= this.tabs.size()) {
             throw new IllegalArgumentException("Index is out of bounds!");
         }
         this.tabs.remove(tabIndex);
-        if(this.tabs.isEmpty()) {
-            this.clearSelection();
+        if(this.selectedIndex == tabIndex && tabIndex == tabs.size()) {
+            this.selectedIndex = tabs.size() - 1;
         }
     }
 
@@ -56,16 +53,13 @@ public class Model implements Serializable {
         return this.selectedIndex != -1;
     }
 
-    public void clearSelection() {
-        this.selectedIndex = -1;
-    }
-
     public int getSelectedIndex() {
         return selectedIndex;
     }
 
     public void setSelectedIndex(int selectedIndex) {
         this.selectedIndex = selectedIndex;
+        System.out.println(this.selectedIndex);
     }
 
     public Tab getTabAt(int index) {
