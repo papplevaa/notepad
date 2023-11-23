@@ -27,17 +27,16 @@ public class Model implements Serializable {
         return data;
     }
 
-    public int addTab(Tab tab) {
+    public void addTab(Tab tab) {
         if(tab == null) {
             throw new NullPointerException("Adding null as tab!");
         }
         this.tabs.add(tab);
-        return this.tabs.indexOf(tab);
     }
 
     public void removeTab(int tabIndex) {
         if(tabIndex < 0 || tabIndex >= this.tabs.size()) {
-            throw new IllegalArgumentException("Index is out of bounds!");
+            throw new IndexOutOfBoundsException("Index is out of bounds!");
         }
         this.tabs.remove(tabIndex);
         if(this.selectedIndex == tabIndex && tabIndex == tabs.size()) {
@@ -59,14 +58,17 @@ public class Model implements Serializable {
 
     public void setSelectedIndex(int selectedIndex) {
         this.selectedIndex = selectedIndex;
-        System.out.println(this.selectedIndex);
     }
 
     public Tab getTabAt(int index) {
         if(index < 0 || index >= this.tabs.size()) {
-            throw new IllegalArgumentException("Index is out of bounds!");
+            throw new IndexOutOfBoundsException("Index is out of bounds!");
         }
         return this.tabs.get(index);
+    }
+
+    public int getIndexOfTab(Tab tab) {
+        return this.tabs.indexOf(tab);
     }
 
     public boolean isDarkMode() {

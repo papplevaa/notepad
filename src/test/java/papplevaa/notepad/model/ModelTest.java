@@ -17,7 +17,8 @@ public class ModelTest {
         // Arrange
         Tab newTab = new Tab();
         // Act
-        int index = model.addTab(newTab);
+        model.addTab(newTab);
+        int index = model.getIndexOfTab(newTab);
         // Assert
         assertEquals(1, model.getNumberOfTabs());
         assertFalse(model.isSelected());
@@ -35,31 +36,45 @@ public class ModelTest {
     @Test
     public void testRemoveNotSelectedTab() {
         // Arrange
-        int first = model.addTab(new Tab());
-        int second = model.addTab(new Tab("Bananas", "Absolute bananas!", null));
-        model.setSelectedIndex(second);
+        // Arrange
+        Tab newTab = new Tab();
+        model.addTab(newTab);
+        int newTabIndex = model.getIndexOfTab(newTab);
+        Tab bananaTab = new Tab("Bananas", "Absolute bananas!", null);
+        model.addTab(bananaTab);
+        int bananaTabIndex = model.getIndexOfTab(bananaTab);
+        model.setSelectedIndex(bananaTabIndex);
         // Act
-        model.removeTab(first);
+        model.removeTab(newTabIndex);
         // Assert
         assertEquals(1, model.getNumberOfTabs());
-        assertEquals(second, model.getSelectedIndex());
+        assertEquals(bananaTabIndex, model.getSelectedIndex());
     }
 
     @Test
     public void testRemoveSelectedTab() {
         // Arrange
-        int first = model.addTab(new Tab());
-        int second = model.addTab(new Tab("Bananas", "Absolute bananas!", null));
-        model.setSelectedIndex(second);
+        Tab newTab = new Tab();
+        model.addTab(newTab);
+        int newTabIndex = model.getIndexOfTab(newTab);
+        Tab bananaTab = new Tab("Bananas", "Absolute bananas!", null);
+        model.addTab(bananaTab);
+        int bananaTabIndex = model.getIndexOfTab(bananaTab);
+        model.setSelectedIndex(bananaTabIndex);
         // Act
-        model.removeTab(second);
+        model.removeTab(bananaTabIndex);
         // Assert
         assertEquals(1, model.getNumberOfTabs());
-        assertEquals(first, model.getSelectedIndex());
+        assertEquals(newTabIndex, model.getSelectedIndex());
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = IndexOutOfBoundsException.class)
     public void testRemoveTabInvalidIndex() {
         model.removeTab(1);
+    }
+
+    @Test (expected = IndexOutOfBoundsException.class)
+    public void testGetTabAtInvalidArgument() {
+        model.getTabAt(1);
     }
 }

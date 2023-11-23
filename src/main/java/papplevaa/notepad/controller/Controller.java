@@ -25,11 +25,12 @@ public class Controller implements CallbackHandler {
         // Create new empty tab
         Tab newTab = new Tab();
         // Add tab to model and view
-        int idx = this.model.addTab(newTab);
+        this.model.addTab(newTab);
+        int index = this.model.getIndexOfTab(newTab);
         this.view.addTab(newTab.getName(), newTab.getCurrentContent());
         // Set new tab as selected in both model and view
-        this.model.setSelectedIndex(idx);
-        this.view.changeSelectedTab(idx);
+        this.model.setSelectedIndex(index);
+        this.view.changeSelectedTab(index);
         // Log
         System.out.println("New tab");
     }
@@ -73,10 +74,11 @@ public class Controller implements CallbackHandler {
         String lastSavedContent = FileUtil.loadContent(filePath);
         Tab openedTab = new Tab(name, lastSavedContent, filePath);
         // Add tab to the model and view
-        int idx = this.model.addTab(openedTab);
+        this.model.addTab(openedTab);
+        int index = this.model.getIndexOfTab(openedTab);
         this.view.addTab(openedTab.getName(), openedTab.getCurrentContent());
-        this.model.setSelectedIndex(idx);
-        this.view.changeSelectedTab(idx);
+        this.model.setSelectedIndex(index);
+        this.view.changeSelectedTab(index);
         // Log
         System.out.println("Open");
     }
