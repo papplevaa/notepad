@@ -230,13 +230,6 @@ public class View {
     }
 
     private void setupCustomizedTextArea(UndoableTextArea textArea) {
-        textArea.getDocument().addUndoableEditListener(new UndoableEditListener() {
-            @Override
-            public void undoableEditHappened(UndoableEditEvent event) {
-                textArea.getUndoManager().addEdit(event.getEdit());
-            }
-        });
-
         textArea.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent event) {

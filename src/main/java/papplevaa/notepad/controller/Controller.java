@@ -135,9 +135,13 @@ public class Controller implements CallbackHandler {
     public void undo() {
         // Tell the selected text area to make the change
         UndoableTextArea textArea = this.view.getSelectedTextArea();
-        if(textArea != null) {
-            textArea.undo();
-            System.out.println("Undo");
+        try {
+            if(textArea != null) {
+                textArea.undo();
+                System.out.println("Undo happened");
+            }
+        } catch(RuntimeException exception) {
+            System.out.println(exception.getMessage());
         }
     }
 
@@ -145,9 +149,13 @@ public class Controller implements CallbackHandler {
     public void redo() {
         // Tell the selected text area to make the change
         UndoableTextArea textArea = this.view.getSelectedTextArea();
-        if(textArea != null) {
-            textArea.redo();
-            System.out.println("Redo");
+        try {
+            if(textArea != null) {
+                textArea.redo();
+                System.out.println("Redo happened");
+            }
+        } catch(RuntimeException exception) {
+            System.out.println(exception.getMessage());
         }
     }
 
