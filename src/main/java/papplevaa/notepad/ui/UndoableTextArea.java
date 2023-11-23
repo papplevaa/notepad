@@ -9,21 +9,17 @@ public class UndoableTextArea extends JTextArea {
 
     public UndoableTextArea() {
         super();
-        initUndoManager();
+        setupUndoManager();
     }
 
     public UndoableTextArea(String content) {
         super(content);
-        initUndoManager();
+        setupUndoManager();
     }
 
     public UndoableTextArea(Document doc) {
         super(doc);
-        initUndoManager();
-    }
-
-    public UndoManager getUndoManager() {
-        return this.undoManager;
+        setupUndoManager();
     }
 
     public void undo() {
@@ -42,7 +38,7 @@ public class UndoableTextArea extends JTextArea {
         }
     }
 
-    private void initUndoManager() {
+    private void setupUndoManager() {
         this.undoManager = new UndoManager();
         this.undoManager.setLimit(100);
         this.getDocument().addUndoableEditListener(event -> undoManager.addEdit(event.getEdit()));

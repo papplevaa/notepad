@@ -16,8 +16,6 @@ public class UndoableTextAreaTest {
         textArea = new UndoableTextArea();
         // Assert
         assertNotNull(textArea);
-        assertNotNull(textArea.getUndoManager());
-        assertEquals(100, textArea.getUndoManager().getLimit());
     }
 
     @Test
@@ -28,7 +26,6 @@ public class UndoableTextAreaTest {
         textArea = new UndoableTextArea(initialContent);
         // Assert
         assertNotNull(textArea);
-        assertNotNull(textArea.getUndoManager());
         assertEquals(initialContent, textArea.getText());
     }
 
@@ -79,5 +76,18 @@ public class UndoableTextAreaTest {
         textArea = new UndoableTextArea("Test");
         // Act
         textArea.redo();
+    }
+
+    @Test (expected = RuntimeException.class)
+    public void testUndoManagerLimit() {
+        // Arrange
+        textArea = new UndoableTextArea();
+        for(int i = 1; i <= 110; i++) {
+            textArea.append("Undoable edit #" + i);
+        }
+        // Act
+        for(int i = 1; i <= 101; i++) {
+            textArea.undo();
+        }
     }
 }
