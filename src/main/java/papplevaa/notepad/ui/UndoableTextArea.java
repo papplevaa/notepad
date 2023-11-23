@@ -23,19 +23,11 @@ public class UndoableTextArea extends JTextArea {
     }
 
     public void undo() {
-        if(this.undoManager.canUndo()) {
-            this.undoManager.undo();
-        } else {
-            throw new RuntimeException("Can not undo!");
-        }
+        undoManager.undo();
     }
 
     public void redo() {
-        if(this.undoManager.canRedo()) {
-            this.undoManager.redo();
-        } else {
-            throw new RuntimeException("Can not redo!");
-        }
+        undoManager.redo();
     }
 
     private void setupUndoManager() {

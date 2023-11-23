@@ -141,7 +141,7 @@ public class Controller implements CallbackHandler {
                 System.out.println("Undo happened");
             }
         } catch(RuntimeException exception) {
-            System.out.println(exception.getMessage());
+            System.out.println("Can not undo!");
         }
     }
 
@@ -155,7 +155,7 @@ public class Controller implements CallbackHandler {
                 System.out.println("Redo happened");
             }
         } catch(RuntimeException exception) {
-            System.out.println(exception.getMessage());
+            System.out.println("Can not redo!");
         }
     }
 
