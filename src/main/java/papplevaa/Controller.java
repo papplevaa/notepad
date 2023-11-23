@@ -13,6 +13,7 @@ public class Controller implements CallbackHandler {
             this.model = model;
         }
         this.view.initialize(this.model);
+        System.out.println("Initialize app");
     }
 
     @Override
