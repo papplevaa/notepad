@@ -290,9 +290,8 @@ public class View {
         int numberOfTabs = model.getNumberOfTabs();
         for(int index = 0; index < numberOfTabs; index++) {
             Tab tabAtIndex = model.getTabAt(index);
-            UndoableTextArea textArea = new UndoableTextArea();
+            UndoableTextArea textArea = new UndoableTextArea(tabAtIndex.getCurrentContent());
             JScrollPane scrollPane = new JScrollPane(textArea);
-            textArea.setText(tabAtIndex.getCurrentContent());
             // The documentListener should be added after creating the text area
             // Else its content will be instantly changed to the already opened tab
             this.setupCustomizedTextArea(textArea);
