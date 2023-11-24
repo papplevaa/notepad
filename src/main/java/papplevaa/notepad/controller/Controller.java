@@ -109,6 +109,7 @@ public class Controller implements CallbackHandler {
             File filePath = selectedTab.getFilePath();
             FileUtil.saveContent(currentContent, filePath);
             selectedTab.commitChanges();
+            this.view.updateTitle(selectedTab.getTitle(), selectedTab.getCurrentContent().equals(selectedTab.getLastSavedContent()));
         }
         System.out.println("Save");
     }
@@ -135,7 +136,7 @@ public class Controller implements CallbackHandler {
         selectedTab.setTitle(name);
         selectedTab.setFilePath(filePath);
         selectedTab.commitChanges();
-        this.view.updateName(name);
+        this.view.updateTitle(name, selectedTab.getCurrentContent().equals(selectedTab.getLastSavedContent()));
         // Log
         System.out.println("Save as");
     }
@@ -215,7 +216,9 @@ public class Controller implements CallbackHandler {
 
     @Override
     public void updateContent(String newContent) {
-        this.model.getTabAt(this.model.getSelectedIndex()).setCurrentContent(newContent);
+        Tab editedTab = this.model.getTabAt(this.model.getSelectedIndex());
+        editedTab.setCurrentContent(newContent);
+        this.view.updateTitle(editedTab.getTitle(), editedTab.getCurrentContent().equals(editedTab.getLastSavedContent()));
         //System.out.println("Content updated");
     }
 
