@@ -31,15 +31,17 @@ public class View {
         this.initMenu();
         this.initTabbedPane(model);
         this.setDarkMode(model.isDarkMode());
-        this.frame.setVisible(true);
         UndoableTextArea selectedTextArea = this.getSelectedTextArea();
         if(selectedTextArea != null) {
             selectedTextArea.requestFocus();
         }
     }
 
+    public void run() {
+        SwingUtilities.invokeLater(() -> this.frame.setVisible(true));
+    }
+
     /* Method to reach the selected text area */
-    // returns null if tabbedPane has no panes
     public UndoableTextArea getSelectedTextArea() {
         JScrollPane scrollPane = (JScrollPane) tabbedPane.getSelectedComponent();
         if(scrollPane == null)
@@ -75,8 +77,8 @@ public class View {
             } else {
                 UIManager.setLookAndFeel(new FlatLightLaf());
             }
-        } catch(Exception ex) {
-            System.out.println("Failed to initialize LaF");
+        } catch(UnsupportedLookAndFeelException exception) {
+            System.out.println("Failed to load custom look and feel!");
         }
         SwingUtilities.updateComponentTreeUI(this.frame);
     }
@@ -104,7 +106,9 @@ public class View {
         return JOptionPane.showConfirmDialog(this.frame, "Do you want to save changes?", "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
     }
 
-    /* Private methods to improve code readability */
+    /* ---------------------- *
+     * INITIALIZATION METHODS *
+     * ---------------------- */
     private void initFrame(Model model) {
         // Set custom close operation here
         this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);

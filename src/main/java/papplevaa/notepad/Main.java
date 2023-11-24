@@ -6,12 +6,10 @@ import papplevaa.notepad.ui.View;
 
 public class Main {
     public static void main(String[] args) {
-        View SwingGUI = new View();
+        View view = new View();
         Model model = new Model();
-        Controller controller = new Controller(SwingGUI, model);
+        Controller controller = new Controller(view, model);
+        controller.loadModel();
+        controller.start();
     }
 }
-
-
-// TODO
-// - exception thrown when copying from intellij to textarea

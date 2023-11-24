@@ -13,11 +13,20 @@ public class Controller implements CallbackHandler {
     public Controller(View view, Model model) {
         this.view = view;
         this.view.registerCallback(this);
-        if(!this.deserializeModel()) {
-            this.model = model;
-        }
+        this.model = model;
+        System.out.println("Construct controller!");
+    }
+
+    public void start() {
         this.view.initialize(this.model);
-        System.out.println("Initialize app");
+        this.view.run();
+        System.out.println("Start the app!");
+    }
+
+    public void loadModel() {
+        if(!this.deserializeModel()) {
+            System.out.println("Failed to load model!");
+        }
     }
 
     @Override
