@@ -56,9 +56,13 @@ public class Controller implements CallbackHandler {
         if(!selectedTab.getCurrentContent().equals(selectedTab.getLastSavedContent())) {
             int result = this.view.showDialog();
             if(result == 0) {
-                this.save();
-                this.model.removeTab(idx);
-                this.view.removeTab(idx);
+                try {
+                    this.save();
+                    this.model.removeTab(idx);
+                    this.view.removeTab(idx);
+                } catch (NullPointerException exception) {
+                    System.out.println(exception.getMessage());
+                }
             } else if (result == 1) {
                 this.model.removeTab(idx);
                 this.view.removeTab(idx);
@@ -71,12 +75,11 @@ public class Controller implements CallbackHandler {
     }
 
     @Override
-    public void open() {
+    public void open() throws NullPointerException {
         // Get path to open
         File filePath = this.view.chooseFile(false);
         if(filePath == null) {
-            System.out.println("No file chosen!");
-            return;
+            throw new NullPointerException("No file chosen!");
         }
         // Create tab
         String name = filePath.getName();
@@ -109,13 +112,13 @@ public class Controller implements CallbackHandler {
             File filePath = selectedTab.getFilePath();
             FileUtil.saveContent(currentContent, filePath);
             selectedTab.commitChanges();
-            this.view.updateTitle(selectedTab.getTitle(), selectedTab.getCurrentContent().equals(selectedTab.getLastSavedContent()));
+            this.view.updateTitleAtIndex(this.model.getSelectedIndex(), selectedTab.getTitle(), selectedTab.getCurrentContent().equals(selectedTab.getLastSavedContent()));
         }
         System.out.println("Save");
     }
 
     @Override
-    public void saveAs() {
+    public void saveAs() throws NullPointerException {
         // Get selected tab
         if(!this.model.isSelected()) {
             System.out.println("No tab is selected!");
@@ -125,8 +128,7 @@ public class Controller implements CallbackHandler {
         // Choose save path
         File filePath = this.view.chooseFile(true);
         if(filePath == null) {
-            System.out.println("No file chosen!");
-            return;
+            throw new NullPointerException("No file chosen!");
         }
         // Save file to chosen path
         String currentContent = selectedTab.getCurrentContent();
@@ -136,7 +138,7 @@ public class Controller implements CallbackHandler {
         selectedTab.setTitle(name);
         selectedTab.setFilePath(filePath);
         selectedTab.commitChanges();
-        this.view.updateTitle(name, selectedTab.getCurrentContent().equals(selectedTab.getLastSavedContent()));
+        this.view.updateTitleAtIndex(this.model.getSelectedIndex(), name, selectedTab.getCurrentContent().equals(selectedTab.getLastSavedContent()));
         // Log
         System.out.println("Save as");
     }
@@ -218,7 +220,7 @@ public class Controller implements CallbackHandler {
     public void updateContent(String newContent) {
         Tab editedTab = this.model.getTabAt(this.model.getSelectedIndex());
         editedTab.setCurrentContent(newContent);
-        this.view.updateTitle(editedTab.getTitle(), editedTab.getCurrentContent().equals(editedTab.getLastSavedContent()));
+        this.view.updateTitleAtIndex(model.getSelectedIndex(), editedTab.getTitle(), editedTab.getCurrentContent().equals(editedTab.getLastSavedContent()));
         //System.out.println("Content updated");
     }
 

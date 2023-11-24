@@ -53,11 +53,11 @@ public class View {
     }
 
     /* Methods for updates */
-    public void updateTitle(String title, boolean saved) {
+    public void updateTitleAtIndex(int index, String title, boolean saved) {
         if(saved) {
-            this.tabbedPane.setTitleAt(this.tabbedPane.getSelectedIndex(), title);
+            this.tabbedPane.setTitleAt(index, title);
         } else {
-            this.tabbedPane.setTitleAt(this.tabbedPane.getSelectedIndex(), "*" + title);
+            this.tabbedPane.setTitleAt(index, "*" + title);
         }
     }
 
@@ -309,7 +309,7 @@ public class View {
             // Else its content will be instantly changed to the already opened tab
             this.setupCustomizedTextArea(textArea);
             this.tabbedPane.add(tabAtIndex.getTitle(), scrollPane);
-            this.updateTitle(tabAtIndex.getTitle(), tabAtIndex.getCurrentContent().equals(tabAtIndex.getLastSavedContent()));
+            this.updateTitleAtIndex(index, tabAtIndex.getTitle(), tabAtIndex.getCurrentContent().equals(tabAtIndex.getLastSavedContent()));
         }
     }
 }
