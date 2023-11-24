@@ -4,6 +4,7 @@ import papplevaa.notepad.model.*;
 import papplevaa.notepad.controller.*;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import java.util.function.IntConsumer;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -285,6 +286,8 @@ public class View {
     }
 
     private void initTabbedPane(Model model) {
+        this.tabbedPane.putClientProperty("JTabbedPane.tabClosable", true);
+        this.tabbedPane.putClientProperty( "JTabbedPane.tabCloseCallback", (IntConsumer) tabIndex -> callback.closeTab());
         this.tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         this.createTabsFromModel(model);
         this.tabbedPane.setSelectedIndex(model.getSelectedIndex());
