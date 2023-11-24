@@ -19,14 +19,13 @@ public final class FileUtil {
         return content.toString();
     }
 
-    public static void saveContent(String currentContent, File filePath) {
+    public static void saveContent(String content, File filePath) {
         try (FileWriter writer = new FileWriter(filePath)) {
-            writer.write(currentContent);
+            writer.write(content);
         } catch (IOException exception) {
             System.out.println("Failed to save content");
         }
     }
-
 
     public static <T extends Serializable> void serialize(File filePath, T object) {
         try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(filePath))) {

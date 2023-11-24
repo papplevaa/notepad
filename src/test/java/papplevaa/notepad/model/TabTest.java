@@ -21,7 +21,7 @@ public class TabTest {
     @Test
     public void testParameterizedConstructor() {
         // Act
-        File file = new File("test.txt");
+        File file = new File("input/load.txt");
         Tab tab = new Tab("Title", "Content", file);
         // Assert
         assertEquals(file, tab.getFilePath());
@@ -44,7 +44,7 @@ public class TabTest {
     public void testSetFilePath() {
         // Arrange
         Tab tab = new Tab();
-        File file = new File("test.txt");
+        File file = new File("input/load.txt");
         // Act
         tab.setFilePath(file);
         // Assert
