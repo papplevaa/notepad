@@ -26,4 +26,25 @@ public final class FileUtil {
             System.out.println("Failed to save content");
         }
     }
+
+
+    public static <T extends Serializable> void serialize(File filePath, T object) {
+        try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(filePath))) {
+            stream.writeObject(object);
+        } catch (IOException exception) {
+            System.out.println("Failed to save data for next session");
+        }
+    }
+
+    public static <T extends Serializable> T deserialize(File filePath, Class<T> tclass) {
+        try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(filePath))) {
+            Object object = stream.readObject();
+            if(tclass.isInstance(object)) {
+                return tclass.cast(object);
+            }
+        } catch (IOException | ClassNotFoundException exception) {
+            System.out.println("Failed to load data from previous session");
+        }
+        return null;
+    }
 }

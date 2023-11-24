@@ -23,8 +23,9 @@ public class Controller implements CallbackHandler {
     }
 
     public void loadModel() {
-        if(!this.deserializeModel()) {
-            System.out.println("Failed to load model!");
+        Model savedModel = FileUtil.deserialize(Model.getDataPath(), Model.class);
+        if(savedModel != null) {
+            this.model = savedModel;
         }
     }
 
@@ -199,7 +200,7 @@ public class Controller implements CallbackHandler {
 
     @Override
     public void close() {
-        this.serializeModel();
+        FileUtil.serialize(Model.getDataPath(), this.model);
         this.view.closeFrame();
         System.out.println("Close frame");
     }
@@ -231,23 +232,5 @@ public class Controller implements CallbackHandler {
             this.model.setSelectedIndex(selectedIndex);
             System.out.println("Changed tab");
         }
-    }
-
-    private void serializeModel() {
-        try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(Model.getDataPath()))) {
-            stream.writeObject(this.model);
-        } catch (IOException exception) {
-            System.out.println("Failed to save data for next session");
-        }
-    }
-
-    private boolean deserializeModel() {
-        try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(Model.getDataPath()))) {
-            this.model = (Model) stream.readObject();
-        } catch (IOException | ClassNotFoundException exception) {
-            System.out.println("Failed to load data from previous session");
-            return false;
-        }
-        return true;
     }
 }
