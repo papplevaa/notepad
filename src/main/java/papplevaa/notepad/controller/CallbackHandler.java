@@ -13,9 +13,9 @@ public interface CallbackHandler {
     void copy();
     void cut();
     void paste();
-    void closeWindow();
+    void close();
     void invertTheme();
     void updateContent(String newContent);
     void updateFrameSize(int width, int height);
-    void changeTab(int selectedIndex);
+    void updateSelectedTab(int selectedIndex);
 }

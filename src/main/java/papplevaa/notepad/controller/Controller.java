@@ -14,7 +14,6 @@ public class Controller implements CallbackHandler {
         this.view = view;
         this.view.registerCallback(this);
         this.model = model;
-        System.out.println("Construct controller!");
     }
 
     public void start() {
@@ -36,7 +35,7 @@ public class Controller implements CallbackHandler {
         // Add tab to model and view
         this.model.addTab(newTab);
         int index = this.model.indexOfTab(newTab);
-        this.view.addTab(newTab.getName(), newTab.getCurrentContent());
+        this.view.addTab(newTab.getTitle(), newTab.getCurrentContent());
         // Set new tab as selected in both model and view
         this.model.setSelectedIndex(index);
         this.view.changeSelectedTab(index);
@@ -85,7 +84,7 @@ public class Controller implements CallbackHandler {
         // Add tab to the model and view
         this.model.addTab(openedTab);
         int index = this.model.indexOfTab(openedTab);
-        this.view.addTab(openedTab.getName(), openedTab.getCurrentContent());
+        this.view.addTab(openedTab.getTitle(), openedTab.getCurrentContent());
         this.model.setSelectedIndex(index);
         this.view.changeSelectedTab(index);
         // Log
@@ -132,7 +131,7 @@ public class Controller implements CallbackHandler {
         FileUtil.saveContent(currentContent, filePath);
         // Update model and view
         String name = filePath.getName();
-        selectedTab.setName(name);
+        selectedTab.setTitle(name);
         selectedTab.setFilePath(filePath);
         selectedTab.commitChanges();
         this.view.updateName(name);
@@ -199,7 +198,7 @@ public class Controller implements CallbackHandler {
     }
 
     @Override
-    public void closeWindow() {
+    public void close() {
         this.serializeModel();
         this.view.closeFrame();
         System.out.println("Close frame");
@@ -227,7 +226,7 @@ public class Controller implements CallbackHandler {
     }
 
     @Override
-    public void changeTab(int selectedIndex) {
+    public void updateSelectedTab(int selectedIndex) {
         if(this.model.getSelectedIndex() != selectedIndex) {
             this.model.setSelectedIndex(selectedIndex);
             System.out.println("Changed tab");

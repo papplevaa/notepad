@@ -5,30 +5,30 @@ import java.io.Serializable;
 
 public class Tab implements Serializable {
     private File filePath;
-    private String name;
+    private String title;
     private String lastSaved;
     private String current;
 
     public Tab() {
         this.filePath = null;
-        this.name = "Untitled";
+        this.title = "Untitled";
         this.lastSaved = "";
         this.current = this.lastSaved;
     }
 
-    public Tab(String name, String lastSavedContent, File filePath) {
+    public Tab(String title, String lastSavedContent, File filePath) {
         this.filePath = filePath;
-        this.name = name;
+        this.title = title;
         this.lastSaved = lastSavedContent;
         this.current = this.lastSaved;
     }
 
-    public String getName() {
-        return this.name;
+    public String getTitle() {
+        return this.title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String name) {
+        this.title = name;
     }
 
     public File getFilePath() {

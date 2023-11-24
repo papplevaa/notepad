@@ -1,15 +1,15 @@
 package papplevaa.notepad.ui;
 
+import papplevaa.notepad.model.*;
+import papplevaa.notepad.controller.*;
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
+
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatLightLaf;
-import papplevaa.notepad.model.Model;
-import papplevaa.notepad.model.Tab;
-import papplevaa.notepad.controller.CallbackHandler;
 
 public class View {
     private CallbackHandler callback;
@@ -31,14 +31,16 @@ public class View {
         this.initMenu();
         this.initTabbedPane(model);
         this.setDarkMode(model.isDarkMode());
-        UndoableTextArea selectedTextArea = this.getSelectedTextArea();
-        if(selectedTextArea != null) {
-            selectedTextArea.requestFocus();
-        }
     }
 
     public void run() {
-        SwingUtilities.invokeLater(() -> this.frame.setVisible(true));
+        SwingUtilities.invokeLater(() -> {
+            this.frame.setVisible(true);
+            UndoableTextArea selectedTextArea = this.getSelectedTextArea();
+            if(selectedTextArea != null) {
+                selectedTextArea.requestFocus();
+            }
+        });
     }
 
     /* Method to reach the selected text area */
@@ -115,7 +117,7 @@ public class View {
         this.frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                callback.closeWindow();
+                callback.close();
             }
         });
         // Set window size here
@@ -286,7 +288,7 @@ public class View {
         this.tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         this.createTabsFromModel(model);
         this.tabbedPane.setSelectedIndex(model.getSelectedIndex());
-        this.tabbedPane.addChangeListener(event -> callback.changeTab(this.tabbedPane.getSelectedIndex()));
+        this.tabbedPane.addChangeListener(event -> callback.updateSelectedTab(this.tabbedPane.getSelectedIndex()));
         this.frame.add(tabbedPane);
     }
 
@@ -299,7 +301,7 @@ public class View {
             // The documentListener should be added after creating the text area
             // Else its content will be instantly changed to the already opened tab
             this.setupCustomizedTextArea(textArea);
-            this.tabbedPane.add(tabAtIndex.getName(), scrollPane);
+            this.tabbedPane.add(tabAtIndex.getTitle(), scrollPane);
         }
     }
 }

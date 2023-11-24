@@ -13,7 +13,7 @@ public class TabTest {
         Tab tab = new Tab();
         // Assert
         assertNull(tab.getFilePath());
-        assertEquals("Untitled", tab.getName());
+        assertEquals("Untitled", tab.getTitle());
         assertEquals("", tab.getLastSavedContent());
         assertEquals("", tab.getCurrentContent());
     }
@@ -25,7 +25,7 @@ public class TabTest {
         Tab tab = new Tab("Title", "Content", file);
         // Assert
         assertEquals(file, tab.getFilePath());
-        assertEquals("Title", tab.getName());
+        assertEquals("Title", tab.getTitle());
         assertEquals("Content", tab.getLastSavedContent());
         assertEquals("Content", tab.getCurrentContent());
     }
@@ -35,9 +35,9 @@ public class TabTest {
         // Arrange
         Tab tab = new Tab();
         // Act
-        tab.setName("Title");
+        tab.setTitle("Title");
         // Assert
-        assertEquals("Title", tab.getName());
+        assertEquals("Title", tab.getTitle());
     }
 
     @Test
