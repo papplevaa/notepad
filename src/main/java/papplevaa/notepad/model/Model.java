@@ -68,7 +68,7 @@ public class Model implements Serializable {
         return this.tabs.get(index);
     }
 
-    public int indexOfTab(Tab tab) {
+    public int indexOfTab(Tab tab) throws NoSuchElementException {
         int index = this.tabs.indexOf(tab);
         if(index == -1) {
             throw new NoSuchElementException("No such tab in model");
