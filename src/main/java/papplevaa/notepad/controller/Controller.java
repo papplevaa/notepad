@@ -78,6 +78,7 @@ public class Controller implements CallbackHandler {
                 return;
             } else if(option == ConfirmDialogOptions.SAVE) {
                 this.save();
+                // Return if save failed
                 if(selectedTab.getFilePath() == null) {
                     return;
                 }
