@@ -80,6 +80,14 @@ public class Controller implements CallbackHandler {
             System.out.println("No file chosen!");
             return;
         }
+        // Do not open the tab again
+        int numberOfTabs = this.model.getNumberOfTabs();
+        for(int index = 0; index < numberOfTabs; index++) {
+            if(this.model.getTabAt(index).getFilePath().equals(filePath)) {
+                System.out.println("File is already open!");
+                return;
+            }
+        }
         // Create tab
         String name = filePath.getName();
         String lastSavedContent = FileUtil.loadContent(filePath);
@@ -259,6 +267,4 @@ public class Controller implements CallbackHandler {
             System.out.println("Changed tab");
         }
     }
-
-
 }
