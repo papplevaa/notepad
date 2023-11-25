@@ -16,17 +16,17 @@ public class Controller implements CallbackHandler {
         this.model = model;
     }
 
-    public void start() {
-        this.view.initialize(this.model);
-        this.view.run();
-        System.out.println("Start the app!");
-    }
-
     public void loadModel() {
         Model savedModel = FileUtil.deserialize(Model.getDataPath(), Model.class);
         if(savedModel != null) {
             this.model = savedModel;
         }
+    }
+
+    public void start() {
+        this.view.initialize(this.model);
+        this.view.run();
+        System.out.println("Start the app!");
     }
 
     @Override
@@ -54,23 +54,22 @@ public class Controller implements CallbackHandler {
         Tab selectedTab = this.model.getTabAt(idx);
         // Check for unsaved changes
         if(!selectedTab.getCurrentContent().equals(selectedTab.getLastSavedContent())) {
+            // Prompt to save changes
             int result = this.view.showDialog();
-            if(result == 0) {
+            if(result == 2) {
+                return;
+            } else if(result == 0) {
                 try {
                     this.save();
-                    this.model.removeTab(idx);
-                    this.view.removeTab(idx);
-                } catch (NullPointerException exception) {
+                } catch (NullPointerException exception)  {
                     System.out.println(exception.getMessage());
+                    return;
                 }
-            } else if (result == 1) {
-                this.model.removeTab(idx);
-                this.view.removeTab(idx);
             }
-        } else {
-            this.model.removeTab(idx);
-            this.view.removeTab(idx);
         }
+        // Close tab
+        this.model.removeTab(idx);
+        this.view.removeTab(idx);
         System.out.println("Close Tab");
     }
 
