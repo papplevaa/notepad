@@ -4,6 +4,9 @@ import papplevaa.notepad.model.*;
 import papplevaa.notepad.controller.*;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import papplevaa.notepad.util.ChooseFileDialogType;
+import papplevaa.notepad.util.ConfirmDialogOptions;
+
 import java.util.function.IntConsumer;
 
 import javax.swing.*;
@@ -53,11 +56,11 @@ public class View {
     }
 
     /* Methods for updates */
-    public void updateTitleAtIndex(int index, String title, boolean saved) {
-        if(saved) {
-            this.tabbedPane.setTitleAt(index, title);
-        } else {
+    public void updateTitleAt(int index, String title, boolean starred) {
+        if(starred) {
             this.tabbedPane.setTitleAt(index, "*" + title);
+        } else {
+            this.tabbedPane.setTitleAt(index, title);
         }
     }
 
@@ -95,12 +98,12 @@ public class View {
     }
 
     /* Methods for showing dialogs */
-    public File chooseFile(boolean save) {
+    public File chooseFile(ChooseFileDialogType dialogType) {
         File selectedFile = null;
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
         int result =
-            save
+            (dialogType == ChooseFileDialogType.SAVE)
                 ? fileChooser.showSaveDialog(this.frame)
                 : fileChooser.showOpenDialog(this.frame);
         if(result == JFileChooser.APPROVE_OPTION) {
@@ -109,8 +112,9 @@ public class View {
         return selectedFile;
     }
 
-    public int showDialog() {
-        return JOptionPane.showConfirmDialog(this.frame, "Do you want to save changes?", "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
+    public ConfirmDialogOptions showConfirmDialog() {
+        int result = JOptionPane.showConfirmDialog(this.frame, "Do you want to save changes?", "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
+        return ConfirmDialogOptions.getByValue(result);
     }
 
     /* ---------------------- *
@@ -309,7 +313,7 @@ public class View {
             // Else its content will be instantly changed to the already opened tab
             this.setupCustomizedTextArea(textArea);
             this.tabbedPane.add(tabAtIndex.getTitle(), scrollPane);
-            this.updateTitleAtIndex(index, tabAtIndex.getTitle(), tabAtIndex.getCurrentContent().equals(tabAtIndex.getLastSavedContent()));
+            this.updateTitleAt(index, tabAtIndex.getTitle(), tabAtIndex.getCurrentContent().equals(tabAtIndex.getLastSavedContent()));
         }
     }
 }
