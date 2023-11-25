@@ -20,6 +20,23 @@ public class Controller implements CallbackHandler {
         Model savedModel = FileUtil.deserialize(Model.getDataPath(), Model.class);
         if(savedModel != null) {
             this.model = savedModel;
+
+            // Read contents of files saved
+            int numberOfTabs = this.model.getNumberOfTabs();
+            for(int index = 0; index < numberOfTabs; index++) {
+                Tab tab = this.model.getTabAt(index);
+                String contentSaved = null;
+                File filePath = tab.getFilePath();
+                if(filePath != null) {
+                    contentSaved = FileUtil.loadContent(filePath);
+                    // contentSaved is null if loadContent fails
+                    // in this case delete the path associated with the tab
+                    if(contentSaved == null) {
+                        tab.setFilePath(null);
+                    }
+                }
+                tab.setLastSavedContent(contentSaved);
+            }
         }
     }
 
@@ -83,7 +100,8 @@ public class Controller implements CallbackHandler {
         // Do not open the tab again
         int numberOfTabs = this.model.getNumberOfTabs();
         for(int index = 0; index < numberOfTabs; index++) {
-            if(this.model.getTabAt(index).getFilePath().equals(filePath)) {
+            File pathOfTabAtIndex = this.model.getTabAt(index).getFilePath();
+            if(pathOfTabAtIndex != null && pathOfTabAtIndex.equals(filePath)) {
                 System.out.println("File is already open!");
                 return;
             }
@@ -257,7 +275,7 @@ public class Controller implements CallbackHandler {
     public void updateFrameSize(int width, int height) {
         this.model.setWindowWidth(width);
         this.model.setWindowHeight(height);
-        //System.out.println("Frame resized");
+        //System.out.println("Frame resized: " + width + "x" + height);
     }
 
     @Override

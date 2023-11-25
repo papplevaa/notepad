@@ -2,11 +2,12 @@ package papplevaa.notepad.model;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Tab implements Serializable {
     private File filePath;
     private String title;
-    private String lastSaved;
+    private transient String lastSaved;
     private String current;
 
     public Tab() {
@@ -41,6 +42,10 @@ public class Tab implements Serializable {
 
     public String getLastSavedContent() {
         return this.lastSaved;
+    }
+
+    public void setLastSavedContent(String content) {
+        this.lastSaved = Objects.requireNonNullElse(content, "");
     }
 
     public String getCurrentContent() {
