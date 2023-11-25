@@ -2,7 +2,7 @@ package papplevaa.notepad.util;
 
 public enum ConfirmDialogOptions {
     SAVE(0),
-    NO_ACTION(1),
+    DO_NOT_SAVE(1),
     CANCEL(2);
 
     private final int value;
@@ -21,6 +21,6 @@ public enum ConfirmDialogOptions {
                 return option;
             }
         }
-        return NO_ACTION;
+        return CANCEL;
     }
 }

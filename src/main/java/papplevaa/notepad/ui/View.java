@@ -2,18 +2,16 @@ package papplevaa.notepad.ui;
 
 import papplevaa.notepad.model.*;
 import papplevaa.notepad.controller.*;
+import papplevaa.notepad.util.*;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
-import papplevaa.notepad.util.ChooseFileDialogType;
-import papplevaa.notepad.util.ConfirmDialogOptions;
-
-import java.util.function.IntConsumer;
 
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.function.IntConsumer;
 
 public class View {
     private CallbackHandler callback;
@@ -313,7 +311,7 @@ public class View {
             // Else its content will be instantly changed to the already opened tab
             this.setupCustomizedTextArea(textArea);
             this.tabbedPane.add(tabAtIndex.getTitle(), scrollPane);
-            this.updateTitleAt(index, tabAtIndex.getTitle(), tabAtIndex.getCurrentContent().equals(tabAtIndex.getLastSavedContent()));
+            this.updateTitleAt(index, tabAtIndex.getTitle(), tabAtIndex.isUnsaved());
         }
     }
 }

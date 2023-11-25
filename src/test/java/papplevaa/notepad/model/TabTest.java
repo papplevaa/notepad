@@ -62,6 +62,17 @@ public class TabTest {
     }
 
     @Test
+    public void testIsUnsaved() {
+        // Arrange
+        Tab tab = new Tab();
+        tab.setCurrentContent("Unsaved content");
+        // Act
+        boolean unsaved = tab.isUnsaved();
+        // Assert
+        assertTrue(unsaved);
+    }
+
+    @Test
     public void testCommitChanges() {
         // Arrange
         Tab tab = new Tab();

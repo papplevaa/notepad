@@ -51,6 +51,10 @@ public class Tab implements Serializable {
         this.current = content;
     }
 
+    public boolean isUnsaved() {
+        return !this.current.equals(this.lastSaved);
+    }
+
     public void commitChanges() {
         this.lastSaved = this.current;
     }
