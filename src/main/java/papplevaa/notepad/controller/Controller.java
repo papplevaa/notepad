@@ -48,6 +48,7 @@ public class Controller implements CallbackHandler {
     public void closeTab() {
         // Get selected tab
         if(!this.model.isSelected()) {
+            System.out.println("No tab is selected!");
             return;
         }
         int idx = this.model.getSelectedIndex();
@@ -74,11 +75,12 @@ public class Controller implements CallbackHandler {
     }
 
     @Override
-    public void open() throws NullPointerException {
+    public void open() {
         // Get path to open
         File filePath = this.view.chooseFile(false);
         if(filePath == null) {
-            throw new NullPointerException("No file chosen!");
+            System.out.println("No file chosen!");
+            return;
         }
         // Create tab
         String name = filePath.getName();
@@ -88,6 +90,7 @@ public class Controller implements CallbackHandler {
         this.model.addTab(openedTab);
         int index = this.model.indexOfTab(openedTab);
         this.view.addTab(openedTab.getTitle(), openedTab.getCurrentContent());
+        // Set the opened tab as selected
         this.model.setSelectedIndex(index);
         this.view.changeSelectedTab(index);
         // Log
@@ -101,18 +104,19 @@ public class Controller implements CallbackHandler {
             System.out.println("No tab is selected!");
             return;
         }
-        Tab selectedTab = this.model.getTabAt(this.model.getSelectedIndex());
+        int idx = this.model.getSelectedIndex();
+        Tab selectedTab = this.model.getTabAt(idx);
         // If tab was never saved, call saveAs method
-        // Else save to path already associated with the tab
         if(selectedTab.getFilePath() == null) {
             this.saveAs();
-        } else {
-            String currentContent = selectedTab.getCurrentContent();
-            File filePath = selectedTab.getFilePath();
-            FileUtil.saveContent(currentContent, filePath);
-            selectedTab.commitChanges();
-            this.view.updateTitleAtIndex(this.model.getSelectedIndex(), selectedTab.getTitle(), selectedTab.getCurrentContent().equals(selectedTab.getLastSavedContent()));
+            return;
         }
+        // Else save to path already associated with the tab
+        String currentContent = selectedTab.getCurrentContent();
+        File filePath = selectedTab.getFilePath();
+        FileUtil.saveContent(currentContent, filePath);
+        selectedTab.commitChanges();
+        this.view.updateTitleAtIndex(this.model.getSelectedIndex(), selectedTab.getTitle(), selectedTab.getCurrentContent().equals(selectedTab.getLastSavedContent()));
         System.out.println("Save");
     }
 
@@ -123,21 +127,23 @@ public class Controller implements CallbackHandler {
             System.out.println("No tab is selected!");
             return;
         }
-        Tab selectedTab = this.model.getTabAt(this.model.getSelectedIndex());
+        int idx = this.model.getSelectedIndex();
+        Tab selectedTab = this.model.getTabAt(idx);
         // Choose save path
         File filePath = this.view.chooseFile(true);
         if(filePath == null) {
-            throw new NullPointerException("No file chosen!");
+            System.out.println("No file chosen!");
+            return;
         }
         // Save file to chosen path
         String currentContent = selectedTab.getCurrentContent();
         FileUtil.saveContent(currentContent, filePath);
         // Update model and view
-        String name = filePath.getName();
-        selectedTab.setTitle(name);
+        String title = filePath.getName();
+        selectedTab.setTitle(title);
         selectedTab.setFilePath(filePath);
         selectedTab.commitChanges();
-        this.view.updateTitleAtIndex(this.model.getSelectedIndex(), name, selectedTab.getCurrentContent().equals(selectedTab.getLastSavedContent()));
+        this.view.updateTitleAtIndex(this.model.getSelectedIndex(), title, selectedTab.getCurrentContent().equals(selectedTab.getLastSavedContent()));
         // Log
         System.out.println("Save as");
     }
@@ -146,11 +152,13 @@ public class Controller implements CallbackHandler {
     public void undo() {
         // Tell the selected text area to make the change
         UndoableTextArea textArea = this.view.getSelectedTextArea();
+        if(textArea == null) {
+            return;
+        }
+
         try {
-            if(textArea != null) {
-                textArea.undo();
-                System.out.println("Undo happened");
-            }
+            textArea.undo();
+            System.out.println("Undo happened");
         } catch(RuntimeException exception) {
             System.out.println("Can not undo!");
         }
@@ -160,11 +168,13 @@ public class Controller implements CallbackHandler {
     public void redo() {
         // Tell the selected text area to make the change
         UndoableTextArea textArea = this.view.getSelectedTextArea();
+        if(textArea == null) {
+            return;
+        }
+
         try {
-            if(textArea != null) {
-                textArea.redo();
-                System.out.println("Redo happened");
-            }
+            textArea.redo();
+            System.out.println("Redo happened");
         } catch(RuntimeException exception) {
             System.out.println("Can not redo!");
         }
@@ -174,30 +184,36 @@ public class Controller implements CallbackHandler {
     public void copy() {
         // Tell the selected text area to make the change
         UndoableTextArea textArea = this.view.getSelectedTextArea();
-        if(textArea != null) {
-            textArea.copy();
-            System.out.println("Copy");
+        if(textArea == null) {
+            return;
         }
+
+        textArea.copy();
+        System.out.println("Copy");
     }
 
     @Override
     public void cut() {
         // Tell the selected text area to make the change
         UndoableTextArea textArea = this.view.getSelectedTextArea();
-        if(textArea != null) {
-            textArea.cut();
-            System.out.println("Cut");
+        if(textArea == null) {
+            return;
         }
+
+        textArea.cut();
+        System.out.println("Cut");
     }
 
     @Override
     public void paste() {
         // Tell the selected text area to make the change
         UndoableTextArea textArea = this.view.getSelectedTextArea();
-        if(textArea != null) {
-            textArea.paste();
-            System.out.println("Paste");
+        if(textArea == null) {
+            return;
         }
+
+        textArea.paste();
+        System.out.println("Paste");
     }
 
     @Override
@@ -217,9 +233,17 @@ public class Controller implements CallbackHandler {
 
     @Override
     public void updateContent(String newContent) {
-        Tab editedTab = this.model.getTabAt(this.model.getSelectedIndex());
-        editedTab.setCurrentContent(newContent);
-        this.view.updateTitleAtIndex(model.getSelectedIndex(), editedTab.getTitle(), editedTab.getCurrentContent().equals(editedTab.getLastSavedContent()));
+        // Get selected tab
+        if(!this.model.isSelected()) {
+            System.out.println("No tab is selected!");
+            return;
+        }
+        int idx = this.model.getSelectedIndex();
+        Tab selectedTab = this.model.getTabAt(idx);
+        // Save new content
+        selectedTab.setCurrentContent(newContent);
+        // Update title in view
+        this.view.updateTitleAtIndex(model.getSelectedIndex(), selectedTab.getTitle(), selectedTab.getCurrentContent().equals(selectedTab.getLastSavedContent()));
         //System.out.println("Content updated");
     }
 
