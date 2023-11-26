@@ -39,8 +39,9 @@ public class FileUtilTest {
         File file = new File("src/test/resources/input/load.txt");
         // Act
         String content = FileUtil.loadContent(file);
+        System.out.println(content);
         // Assert
-        assertEquals("Hello, World!!!", content);
+        assertEquals("Hello, World!!!\r\n", content);
     }
 
     /**

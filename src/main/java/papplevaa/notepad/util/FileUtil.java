@@ -20,9 +20,8 @@ public final class FileUtil {
         StringBuilder content = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             while (reader.ready()) {
-                String line = reader.readLine();
-                content.append(line);
-                content.append(System.lineSeparator());
+                char readChar = (char)reader.read();
+                content.append(readChar);
             }
         } catch (IOException e) {
             System.out.println("Failed to load content");
