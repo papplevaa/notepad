@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"papplevaa.notepad"},{"l":"papplevaa.notepad.controller"},{"l":"papplevaa.notepad.model"},{"l":"papplevaa.notepad.ui"},{"l":"papplevaa.notepad.util"}];updateSearchResults();
