@@ -11,6 +11,7 @@ public final class FileUtil {
             while (reader.ready()) {
                 String line = reader.readLine();
                 content.append(line);
+                content.append(System.lineSeparator());
             }
         } catch (IOException e) {
             System.out.println("Failed to load content");

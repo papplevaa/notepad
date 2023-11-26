@@ -6,16 +6,32 @@ import papplevaa.notepad.util.*;
 
 import java.io.*;
 
+/**
+ * The Controller class manages the communication between the View and Model in the Notepad application.
+ * It implements the CallbackHandler interface to handle user actions and updates from the View.
+ */
 public class Controller implements CallbackHandler {
+    /** The view associated with this controller. */
     private View view;
+    /** The model associated with this controller. */
     private Model model;
 
+    /**
+     * Constructs a new Controller with the specified view and model.
+     *
+     * @param view  The view to associate with this controller.
+     * @param model The model to associate with this controller.
+     */
     public Controller(View view, Model model) {
         this.view = view;
         this.view.registerCallback(this);
         this.model = model;
     }
 
+    /**
+     * Loads the model from the serialized data file and updates the model accordingly.
+     * Reads contents of files saved in the model and updates tab information.
+     */
     public void loadModel() {
         Model savedModel = FileUtil.deserialize(Model.getDataPath(), Model.class);
         if(savedModel != null) {
@@ -40,12 +56,22 @@ public class Controller implements CallbackHandler {
         }
     }
 
+    /**
+     * Starts the Notepad application by initializing the view and running it.
+     */
     public void start() {
         this.view.initialize(this.model);
         this.view.run();
         System.out.println("Start the app!");
     }
 
+    /* ------ CallbackHandler interface methods ------ */
+    /**
+     * {@inheritDoc}
+     * Creates a new, empty tab in the Notepad application.
+     * Adds the new tab to both the model, and the view.
+     * Sets it as the selected tab.
+     */
     @Override
     public void newTab() {
         // Create new empty tab
@@ -61,6 +87,12 @@ public class Controller implements CallbackHandler {
         System.out.println("New tab");
     }
 
+    /**
+     * {@inheritDoc}
+     * Closes the currently active tab in the Notepad application.
+     * Checks for unsaved changes, prompts the user to save if necessary,
+     * and removes the tab from both the model and view.
+     */
     @Override
     public void closeTab() {
         // Get selected tab
@@ -90,6 +122,11 @@ public class Controller implements CallbackHandler {
         System.out.println("Close Tab");
     }
 
+    /**
+     * {@inheritDoc}
+     * Opens a file chooser dialog to select a file, creates a new tab with the file's content, and adds it
+     * to both the model and view. Sets the newly opened tab as the selected tab.
+     */
     @Override
     public void open() {
         // Get path to open
@@ -103,6 +140,7 @@ public class Controller implements CallbackHandler {
         for(int index = 0; index < numberOfTabs; index++) {
             File pathOfTabAtIndex = this.model.getTabAt(index).getFilePath();
             if(pathOfTabAtIndex != null && pathOfTabAtIndex.equals(filePath)) {
+                this.view.changeSelectedTab(index);
                 System.out.println("File is already open!");
                 return;
             }
@@ -122,6 +160,11 @@ public class Controller implements CallbackHandler {
         System.out.println("Open");
     }
 
+    /**
+     * {@inheritDoc}
+     * Saves the content of the currently active tab. If the tab has not been saved before,
+     * invokes the saveAs method.
+     */
     @Override
     public void save() {
         // Get selected tab
@@ -145,6 +188,11 @@ public class Controller implements CallbackHandler {
         System.out.println("Save");
     }
 
+    /**
+     * {@inheritDoc}
+     * Opens a file chooser dialog to choose a location to save the content of the currently active tab.
+     * Updates the tab's file path, saves the content.
+     */
     @Override
     public void saveAs() {
         // Get selected tab
@@ -173,6 +221,10 @@ public class Controller implements CallbackHandler {
         System.out.println("Save as");
     }
 
+    /**
+     * {@inheritDoc}
+     * Undoes the last user action in the currently active tab using the UndoableTextArea.
+     */
     @Override
     public void undo() {
         // Tell the selected text area to make the change
@@ -189,6 +241,10 @@ public class Controller implements CallbackHandler {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * Redoes the previously undone user action in the currently active tab using the UndoableTextArea.
+     */
     @Override
     public void redo() {
         // Tell the selected text area to make the change
@@ -205,6 +261,10 @@ public class Controller implements CallbackHandler {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * Copies the selected content in the currently active tab using the UndoableTextArea.
+     */
     @Override
     public void copy() {
         // Tell the selected text area to make the change
@@ -217,6 +277,10 @@ public class Controller implements CallbackHandler {
         System.out.println("Copy");
     }
 
+    /**
+     * {@inheritDoc}
+     * Cuts the selected content in the currently active tab using the UndoableTextArea.
+     */
     @Override
     public void cut() {
         // Tell the selected text area to make the change
@@ -229,6 +293,10 @@ public class Controller implements CallbackHandler {
         System.out.println("Cut");
     }
 
+    /**
+     * {@inheritDoc}
+     * Pastes the copied or cut content in the currently active tab using the UndoableTextArea.
+     */
     @Override
     public void paste() {
         // Tell the selected text area to make the change
@@ -241,6 +309,10 @@ public class Controller implements CallbackHandler {
         System.out.println("Paste");
     }
 
+    /**
+     * {@inheritDoc}
+     * Closes the Notepad application, serializes the model, and disposes of the application frame.
+     */
     @Override
     public void close() {
         FileUtil.serialize(Model.getDataPath(), this.model);
@@ -248,6 +320,11 @@ public class Controller implements CallbackHandler {
         System.out.println("Close frame");
     }
 
+    /**
+     * {@inheritDoc}
+     * Inverts the theme (dark mode to light mode or vice versa) in the Notepad application.
+     * Updates both the model and view to reflect the theme change.
+     */
     @Override
     public void invertTheme() {
         boolean isDarkMode = this.model.isDarkMode();
@@ -256,6 +333,23 @@ public class Controller implements CallbackHandler {
         System.out.println("Theme changed");
     }
 
+    /**
+     * {@inheritDoc}
+     * Updates the model with the newly selected tab's index.
+     */
+    @Override
+    public void updateSelectedTab(int selectedIndex) {
+        if(this.model.getSelectedIndex() != selectedIndex) {
+            this.model.setSelectedIndex(selectedIndex);
+            System.out.println("Changed tab");
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * Updates the content of the currently active tab with the provided new content in the model.
+     * Updates the title in the view.
+     */
     @Override
     public void updateContent(String newContent) {
         // Get selected tab
@@ -272,18 +366,15 @@ public class Controller implements CallbackHandler {
         //System.out.println("Content updated");
     }
 
+    /**
+     * {@inheritDoc}
+     * Updates the size of the Notepad application window with the provided width and height.
+     * Updates the model with the new window size.
+     */
     @Override
     public void updateFrameSize(int width, int height) {
         this.model.setWindowWidth(width);
         this.model.setWindowHeight(height);
         //System.out.println("Frame resized: " + width + "x" + height);
-    }
-
-    @Override
-    public void updateSelectedTab(int selectedIndex) {
-        if(this.model.getSelectedIndex() != selectedIndex) {
-            this.model.setSelectedIndex(selectedIndex);
-            System.out.println("Changed tab");
-        }
     }
 }
