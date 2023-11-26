@@ -6,7 +6,14 @@ import java.io.File;
 
 import static  org.junit.Assert.*;
 
+/**
+ * Unit tests for the Tab class.
+ */
 public class TabTest {
+    /**
+     * Test: Default constructor.
+     * Expected: Tab is created with default values.
+     */
     @Test
     public void testDefaultConstructor() {
         // Act
@@ -18,6 +25,10 @@ public class TabTest {
         assertEquals("", tab.getCurrentContent());
     }
 
+    /**
+     * Test: Parameterized constructor.
+     * Expected: Tab is created with specified values.
+     */
     @Test
     public void testParameterizedConstructor() {
         // Act
@@ -30,6 +41,10 @@ public class TabTest {
         assertEquals("Content", tab.getCurrentContent());
     }
 
+    /**
+     * Test: setName method.
+     * Expected: Tab's title is set correctly.
+     */
     @Test
     public void testSetName() {
         // Arrange
@@ -40,6 +55,10 @@ public class TabTest {
         assertEquals("Title", tab.getTitle());
     }
 
+    /**
+     * Test: setFilePath method.
+     * Expected: Tab's file path is set correctly.
+     */
     @Test
     public void testSetFilePath() {
         // Arrange
@@ -51,6 +70,10 @@ public class TabTest {
         assertEquals(file, tab.getFilePath());
     }
 
+    /**
+     * Test: setCurrentContent method.
+     * Expected: Tab's current content is set correctly.
+     */
     @Test
     public void testSetCurrentContent() {
         // Arrange
@@ -61,6 +84,10 @@ public class TabTest {
         assertEquals("Content", tab.getCurrentContent());
     }
 
+    /**
+     * Test: isUnsaved method.
+     * Expected: Returns true.
+     */
     @Test
     public void testIsUnsaved() {
         // Arrange
@@ -72,6 +99,10 @@ public class TabTest {
         assertTrue(unsaved);
     }
 
+    /**
+     * Test: commitChanges method.
+     * Expected: Last saved content is updated with the current content.
+     */
     @Test
     public void testCommitChanges() {
         // Arrange

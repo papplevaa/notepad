@@ -7,9 +7,16 @@ import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 import javax.swing.undo.CannotUndoException;
 
+/**
+ * Unit tests for the UndoableTextArea class.
+ */
 public class UndoableTextAreaTest {
     UndoableTextArea textArea;
 
+    /**
+     * Test: Default constructor.
+     * Expected: UndoableTextArea is created successfully.
+     */
     @Test
     public void testUndoableTextAreaInitialization() {
         // Act
@@ -18,6 +25,10 @@ public class UndoableTextAreaTest {
         assertNotNull(textArea);
     }
 
+    /**
+     * Test: Parameterized constructor where the parameter is the initial content stored in a String.
+     * Expected: UndoableTextArea is created with the specified initial content.
+     */
     @Test
     public void testUndoableTextAreaWithContent() {
         // Arrange
@@ -29,6 +40,10 @@ public class UndoableTextAreaTest {
         assertEquals(initialContent, textArea.getText());
     }
 
+    /**
+     * Test: Parameterized constructor where the parameter is the initial content stored in a document.
+     * Expected: UndoableTextArea is created with the specified initial document.
+     */
     @Test
     public void testUndoableTextAreaWithDocument() {
         // Arrange
@@ -39,6 +54,10 @@ public class UndoableTextAreaTest {
         assertEquals(initialDocument, textArea.getDocument());
     }
 
+    /**
+     * Test: Undo operation.
+     * Expected: Content is set to the state before the last change.
+     */
     @Test
     public void testUndo() throws CannotUndoException {
         // Arrange
@@ -50,6 +69,10 @@ public class UndoableTextAreaTest {
         assertEquals("", textArea.getText());
     }
 
+    /**
+     * Test: Undo operation without any change.
+     * Expected: RuntimeException (CannotUndoException) is thrown.
+     */
     @Test (expected = RuntimeException.class)
     public void testUndoWithoutChange() {
         // Arrange
@@ -58,6 +81,10 @@ public class UndoableTextAreaTest {
         textArea.undo();
     }
 
+    /**
+     * Test: Redo operation.
+     * Expected: Content is restored to the state after the last undone change.
+     */
     @Test
     public void testRedo() {
         // Arrange
@@ -70,6 +97,10 @@ public class UndoableTextAreaTest {
         assertEquals("Testing!!!", textArea.getText());
     }
 
+    /**
+     * Test: Redo operation without any undo.
+     * Expected: RuntimeException (CannotRedoException) is thrown.
+     */
     @Test (expected = RuntimeException.class)
     public void testRedoWithoutUndo() {
         // Arrange
@@ -78,6 +109,10 @@ public class UndoableTextAreaTest {
         textArea.redo();
     }
 
+    /**
+     * Test: UndoManager limit.
+     * Expected: RuntimeException is thrown when exceeding the limit.
+     */
     @Test (expected = RuntimeException.class)
     public void testUndoManagerLimit() {
         // Arrange

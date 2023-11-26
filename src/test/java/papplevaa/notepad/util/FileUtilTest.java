@@ -7,19 +7,32 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 
+/**
+ * Unit tests for the FileUtil class.
+ */
 public class FileUtilTest {
+    /**
+     * Set up method that creates a directory for testing before class execution.
+     */
     @BeforeClass
     public static void setup() {
         File dump = new File("src/test/resources/dump");
         createDirectory(dump);
     }
 
+    /**
+     * Clean up method that deletes the testing directory after class execution.
+     */
     @AfterClass
     public static void cleanup() {
         File dump = new File("src/test/resources/dump");
         deleteDirectory(dump);
     }
 
+    /**
+     * Test: Load content from a file.
+     * Expected: Content is successfully loaded from the specified file.
+     */
     @Test
     public void testLoadContent() {
         // Arrange
@@ -30,6 +43,10 @@ public class FileUtilTest {
         assertEquals("Hello, World!!!", content);
     }
 
+    /**
+     * Test: Save content to a file.
+     * Expected: Content is successfully saved to the specified file.
+     */
     @Test
     public void testSaveContent() {
         // Arrange
@@ -41,6 +58,10 @@ public class FileUtilTest {
         assertEquals("Passw1234", contentReadFromDisk);
     }
 
+    /**
+     * Test: Serialization and Deserialization of an object.
+     * Expected: The object is successfully serialized and deserialized.
+     */
     @Test
     public void testSerialization() {
         // Arrange
@@ -53,12 +74,18 @@ public class FileUtilTest {
         assertEquals(serialized, deserialized);
     }
 
+    /**
+     * Utility method: Create a directory if it does not exist.
+     */
     private static void createDirectory(File directory) {
         if(!directory.exists()) {
             directory.mkdir();
         }
     }
 
+    /**
+     * Utility method: Delete a directory and its contents.
+     */
     private static void deleteDirectory(File directory) {
         if(directory.exists()) {
             File[] files = directory.listFiles();
