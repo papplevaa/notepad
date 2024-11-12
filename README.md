@@ -36,3 +36,17 @@ It provides essential features such as creating, opening, saving, and editing te
 ## Contact
 
 For any issues, please contact me at [papp.levente2003@gmail.com](papp.levente2003@gmail.com).
+
+## Screenshots in action
+
+### Light theme
+![Light theme](screenshots/light-theme.png)
+
+### Dark theme
+![Dark theme](screenshots/dark-theme.png)
+
+### Undo-redo capabilities
+![Undo-redo](screenshots/undo-redo.gif)
+
+### Save
+![Save](screenshots/save.png)
